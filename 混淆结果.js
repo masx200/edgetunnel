@@ -1,26 +1,26 @@
-import { connect as e } from "cloudflare:sockets";
-let t,
+import { connect } from "cloudflare:sockets";
+let e,
+  t,
   n,
-  s,
-  r = "",
-  a = null,
-  o = !1,
-  i = "",
-  c = {},
-  l = 0,
-  u = !0,
-  d = !1,
-  h = [
+  s = "",
+  r = null,
+  a = !1,
+  o = "",
+  i = {},
+  c = 0,
+  l = !0,
+  u = !1,
+  d = [
     "*tapecontent.net",
     "*cloudatacdn.com",
     "*loadshare.org",
     "*cdn-centaurus.com",
     "scholar.google.com",
   ];
-const f = "https://edt-pages.github.io";
-export default {
-  async fetch(e, n, s) {
-    const a = new URL(function (e) {
+const h = "https://edt-pages.github.io";
+var f = {
+  async fetch(t, env, ctx) {
+    const n = new URL(function (e) {
         const t = (e = e.replace(/%5[Cc]/g, "").replace(/\\/g, "")).indexOf(
             "#",
           ),
@@ -28,46 +28,46 @@ export default {
         if (n.includes("?") || !/%3f/i.test(n)) return e;
         const s = -1 === t ? "" : e.slice(t);
         return n.replace(/%3f/i, "?") + s;
-      }(e.url)),
-      o = e.headers.get("User-Agent") || "null",
-      i = (e.headers.get("Upgrade") || "").toLowerCase(),
-      c = (e.headers.get("content-type") || "").toLowerCase(),
-      l = n.ADMIN || n.admin || n.PASSWORD || n.password || n.pswd || n.TOKEN ||
-        n.KEY || n.UUID || n.uuid,
-      p = n.KEY || "勿动此默认密钥，有需求请自行通过添加变量KEY进行修改",
-      S = await B(l + p),
-      $ =
+      }(t.url)),
+      r = t.headers.get("User-Agent") || "null",
+      a = (t.headers.get("Upgrade") || "").toLowerCase(),
+      o = (t.headers.get("content-type") || "").toLowerCase(),
+      i = env.ADMIN || env.admin || env.PASSWORD || env.password || env.pswd ||
+        env.TOKEN || env.KEY || env.UUID || env.uuid,
+      c = env.KEY || "勿动此默认密钥，有需求请自行通过添加变量KEY进行修改",
+      f = await B(i + c),
+      p =
         /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
-      A = n.UUID || n.uuid,
-      k = A && $.test(A) ? A.toLowerCase() : [
-        S.slice(0, 8),
-        S.slice(8, 12),
-        "4" + S.slice(13, 16),
-        "8" + S.slice(17, 20),
-        S.slice(20),
+      S = env.UUID || env.uuid,
+      $ = S && p.test(S) ? S.toLowerCase() : [
+        f.slice(0, 8),
+        f.slice(8, 12),
+        "4" + f.slice(13, 16),
+        "8" + f.slice(17, 20),
+        f.slice(20),
       ].join("-"),
-      j =
-        (n.HOST
-          ? (await V(n.HOST)).map((e) =>
+      A =
+        (env.HOST
+          ? (await V(env.HOST)).map((e) =>
             e.toLowerCase().replace(/^https?:\/\//, "").split("/")[0].split(
               ":",
             )[0]
           )
-          : [a.hostname])[0],
-      H = a.pathname.slice(1).toLowerCase();
-    if (d = ["1", "true"].includes(n.DEBUG) || d, n.PROXYIP) {
-      const e = await V(n.PROXYIP);
-      r = e[Math.floor(Math.random() * e.length)], u = !1;
-    } else r = (e.cf.colo + ".PrOxYIp.CmLiUsSsS.nEt").toLowerCase();
-    const _ = e.headers.get("X-Real-IP") || e.headers.get("CF-Connecting-IP") ||
-      e.headers.get("X-Forwarded-For") || e.headers.get("True-Client-IP") ||
-      e.headers.get("Fly-Client-IP") ||
-      e.headers.get("X-Appengine-Remote-Addr") ||
-      e.headers.get("X-Forwarded-For") || e.headers.get("X-Real-IP") ||
-      e.headers.get("X-Cluster-Client-IP") || e.cf?.clientTcpRtt || "未知IP";
+          : [n.hostname])[0],
+      k = n.pathname.slice(1).toLowerCase();
+    if (u = ["1", "true"].includes(env.DEBUG) || u, env.PROXYIP) {
+      const e = await V(env.PROXYIP);
+      s = e[Math.floor(Math.random() * e.length)], l = !1;
+    } else s = (t.cf.colo + ".PrOxYIp.CmLiUsSsS.nEt").toLowerCase();
+    const j = t.headers.get("X-Real-IP") || t.headers.get("CF-Connecting-IP") ||
+      t.headers.get("X-Forwarded-For") || t.headers.get("True-Client-IP") ||
+      t.headers.get("Fly-Client-IP") ||
+      t.headers.get("X-Appengine-Remote-Addr") ||
+      t.headers.get("X-Forwarded-For") || t.headers.get("X-Real-IP") ||
+      t.headers.get("X-Cluster-Client-IP") || t.cf?.clientTcpRtt || "未知IP";
     if (
-      n.GO2SOCKS5 && (h = await V(n.GO2SOCKS5)),
-        "version" === H && a.searchParams.get("uuid") === k
+      env.GO2SOCKS5 && (d = await V(env.GO2SOCKS5)),
+        "version" === k && n.searchParams.get("uuid") === $
     ) {
       return new Response(
         JSON.stringify({
@@ -79,9 +79,9 @@ export default {
         },
       );
     }
-    if (l && "websocket" === i) {
-      return await Y(a),
-        M(`[WebSocket] 命中请求: ${a.pathname}${a.search}`),
+    if (i && "websocket" === a) {
+      return await Y(n),
+        M(`[WebSocket] 命中请求: ${n.pathname}${n.search}`),
         await async function (e, t, n) {
           const s = new WebSocketPair(), [r, a] = Object.values(s);
           a.accept(), a.binaryType = "arraybuffer";
@@ -518,14 +518,14 @@ export default {
               O(a);
           }),
             new Response(null, { status: 101, webSocket: r });
-        }(e, k, a);
+        }(t, $, n);
     }
-    if (l && !H.startsWith("admin/") && "login" !== H && "POST" === e.method) {
-      await Y(a);
-      const t = e.headers.get("Referer") || "";
-      return t.includes("x_padding", 14) || t.includes("x_padding=") ||
-          !c.startsWith("application/grpc")
-        ? (M(`[XHTTP] 命中请求: ${a.pathname}${a.search}`),
+    if (i && !k.startsWith("admin/") && "login" !== k && "POST" === t.method) {
+      await Y(n);
+      const e = t.headers.get("Referer") || "";
+      return e.includes("x_padding", 14) || e.includes("x_padding=") ||
+          !o.startsWith("application/grpc")
+        ? (M(`[XHTTP] 命中请求: ${n.pathname}${n.search}`),
           await async function (e, t) {
             if (!e.body) return new Response("Bad Request", { status: 400 });
             const n = e.body.getReader(),
@@ -805,8 +805,8 @@ export default {
               }),
               { status: 200, headers: i },
             );
-          }(e, k))
-        : (M(`[gRPC] 命中请求: ${a.pathname}${a.search}`),
+          }(t, $))
+        : (M(`[gRPC] 命中请求: ${n.pathname}${n.search}`),
           await async function (e, t) {
             if (!e.body) return new Response("Bad Request", { status: 400 });
             const n = e.body.getReader(),
@@ -1036,16 +1036,16 @@ export default {
               }),
               { status: 200, headers: c },
             );
-          }(e, k));
+          }(t, $));
     }
-    if ("http:" === a.protocol) {
+    if ("http:" === n.protocol) {
       return Response.redirect(
-        a.href.replace(`http://${a.hostname}`, `https://${a.hostname}`),
+        n.href.replace(`http://${n.hostname}`, `https://${n.hostname}`),
         301,
       );
     }
-    if (!l) {
-      return fetch(f + "/noADMIN").then((e) => {
+    if (!i) {
+      return fetch(h + "/noADMIN").then((e) => {
         const t = new Headers(e.headers);
         return t.set(
           "Cache-Control",
@@ -1060,70 +1060,70 @@ export default {
           });
       });
     }
-    if (n.KV && "function" == typeof n.KV.get) {
-      const r = a.pathname.slice(1);
+    if (env.KV && "function" == typeof env.KV.get) {
+      const s = n.pathname.slice(1);
       if (
-        r === p && "勿动此默认密钥，有需求请自行通过添加变量KEY进行修改" !== p
+        s === c && "勿动此默认密钥，有需求请自行通过添加变量KEY进行修改" !== c
       ) {
-        const e = new URLSearchParams(a.search);
-        return e.set("token", await B(j + k)),
+        const e = new URLSearchParams(n.search);
+        return e.set("token", await B(A + $)),
           new Response("重定向中...", {
             status: 302,
             headers: { Location: `/sub?${e.toString()}` },
           });
       }
-      if ("login" === H) {
-        const t = e.headers.get("Cookie") || "",
-          n = t.split(";").find((e) => e.trim().startsWith("auth="))?.split(
+      if ("login" === k) {
+        const e = t.headers.get("Cookie") || "",
+          n = e.split(";").find((e) => e.trim().startsWith("auth="))?.split(
             "=",
           )[1];
-        if (n == await B(o + p + l)) {
+        if (n == await B(r + c + i)) {
           return new Response("重定向中...", {
             status: 302,
             headers: { Location: "/admin" },
           });
         }
-        if ("POST" === e.method) {
-          const t = await e.text();
-          if (new URLSearchParams(t).get("password") === l) {
+        if ("POST" === t.method) {
+          const e = await t.text();
+          if (new URLSearchParams(e).get("password") === i) {
             const e = new Response(JSON.stringify({ success: !0 }), {
               status: 200,
               headers: { "Content-Type": "application/json;charset=utf-8" },
             });
             return e.headers.set(
               "Set-Cookie",
-              `auth=${await B(o + p + l)}; Path=/; Max-Age=86400; HttpOnly`,
+              `auth=${await B(r + c + i)}; Path=/; Max-Age=86400; HttpOnly`,
             ),
               e;
           }
         }
-        return fetch(f + "/login");
+        return fetch(h + "/login");
       }
-      if ("admin" === H || H.startsWith("admin/")) {
-        const i = e.headers.get("Cookie") || "",
-          c = i.split(";").find((e) => e.trim().startsWith("auth="))?.split(
+      if ("admin" === k || k.startsWith("admin/")) {
+        const a = t.headers.get("Cookie") || "",
+          o = a.split(";").find((e) => e.trim().startsWith("auth="))?.split(
             "=",
           )[1];
-        if (!c || c !== await B(o + p + l)) {
+        if (!o || o !== await B(r + c + i)) {
           return new Response("重定向中...", {
             status: 302,
             headers: { Location: "/login" },
           });
         }
-        if ("admin/log.json" === H) {
-          const e = await n.KV.get("log.json") || "[]";
+        if ("admin/log.json" === k) {
+          const e = await env.KV.get("log.json") || "[]";
           return new Response(e, {
             status: 200,
             headers: { "Content-Type": "application/json;charset=utf-8" },
           });
         }
-        if ("admin/getCloudflareUsage" === r) {
+        if ("admin/getCloudflareUsage" === s) {
           try {
             const e = await te(
-              a.searchParams.get("Email"),
-              a.searchParams.get("GlobalAPIKey"),
-              a.searchParams.get("AccountID"),
-              a.searchParams.get("APIToken"),
+              n.searchParams.get("Email"),
+              n.searchParams.get("GlobalAPIKey"),
+              n.searchParams.get("AccountID"),
+              n.searchParams.get("APIToken"),
             );
             return new Response(JSON.stringify(e, null, 2), {
               status: 200,
@@ -1140,18 +1140,18 @@ export default {
             });
           }
         } else {
-          if ("admin/getADDAPI" === r) {
-            if (a.searchParams.get("url")) {
-              const e = a.searchParams.get("url");
+          if ("admin/getADDAPI" === s) {
+            if (n.searchParams.get("url")) {
+              const e = n.searchParams.get("url");
               try {
                 new URL(e);
-                const t = await X([e], a.searchParams.get("port") || "443");
-                let n = t[0].length > 0 ? t[0] : t[1];
-                return n = n.map((e) =>
+                const t = await X([e], n.searchParams.get("port") || "443");
+                let s = t[0].length > 0 ? t[0] : t[1];
+                return s = s.map((e) =>
                   e.replace(/#(.+)$/, (e, t) => "#" + decodeURIComponent(t))
                 ),
                   new Response(
-                    JSON.stringify({ success: !0, data: n }, null, 2),
+                    JSON.stringify({ success: !0, data: s }, null, 2),
                     {
                       status: 200,
                       headers: {
@@ -1178,20 +1178,20 @@ export default {
               },
             );
           }
-          if ("admin/check" === H) {
+          if ("admin/check" === k) {
             let e;
-            if (a.searchParams.has("socks5")) {
-              e = await se("socks5", a.searchParams.get("socks5"));
-            } else if (a.searchParams.has("http")) {
-              e = await se("http", a.searchParams.get("http"));
+            if (n.searchParams.has("socks5")) {
+              e = await se("socks5", n.searchParams.get("socks5"));
+            } else if (n.searchParams.has("http")) {
+              e = await se("http", n.searchParams.get("http"));
             } else {
-              if (!a.searchParams.has("https")) {
+              if (!n.searchParams.has("https")) {
                 return new Response(JSON.stringify({ error: "缺少代理参数" }), {
                   status: 400,
                   headers: { "Content-Type": "application/json;charset=utf-8" },
                 });
               }
-              e = await se("https", a.searchParams.get("https"));
+              e = await se("https", n.searchParams.get("https"));
             }
             return new Response(JSON.stringify(e, null, 2), {
               status: 200,
@@ -1199,12 +1199,12 @@ export default {
             });
           }
         }
-        if (t = await G(n, j, k, o), "admin/init" === H) {
+        if (e = await G(env, A, $, r), "admin/init" === k) {
           try {
-            return t = await G(n, j, k, o, !0),
-              s.waitUntil(F(n, e, _, "Init_Config", t)),
-              t.init = "配置已重置为默认值",
-              new Response(JSON.stringify(t, null, 2), {
+            return e = await G(env, A, $, r, !0),
+              ctx.waitUntil(F(env, t, j, "Init_Config", e)),
+              e.init = "配置已重置为默认值",
+              new Response(JSON.stringify(e, null, 2), {
                 status: 200,
                 headers: { "Content-Type": "application/json;charset=utf-8" },
               });
@@ -1218,13 +1218,13 @@ export default {
               headers: { "Content-Type": "application/json;charset=utf-8" },
             });
           }
-        } else if ("POST" === e.method) {
-          if ("admin/config.json" === H) {
+        } else if ("POST" === t.method) {
+          if ("admin/config.json" === k) {
             try {
-              const r = await e.json();
-              return r.UUID && r.HOST
-                ? (await n.KV.put("config.json", JSON.stringify(r, null, 2)),
-                  s.waitUntil(F(n, e, _, "Save_Config", t)),
+              const n = await t.json();
+              return n.UUID && n.HOST
+                ? (await env.KV.put("config.json", JSON.stringify(n, null, 2)),
+                  ctx.waitUntil(F(env, t, j, "Save_Config", e)),
                   new Response(
                     JSON.stringify({ success: !0, message: "配置已保存" }),
                     {
@@ -1250,23 +1250,23 @@ export default {
                   },
                 );
             }
-          } else if ("admin/cf.json" === H) {
+          } else if ("admin/cf.json" === k) {
             try {
-              const r = await e.json(),
-                a = {
+              const n = await t.json(),
+                s = {
                   Email: null,
                   GlobalAPIKey: null,
                   AccountID: null,
                   APIToken: null,
                   UsageAPI: null,
                 };
-              if (!r.init || !0 !== r.init) {
-                if (r.Email && r.GlobalAPIKey) {
-                  a.Email = r.Email, a.GlobalAPIKey = r.GlobalAPIKey;
-                } else if (r.AccountID && r.APIToken) {
-                  a.AccountID = r.AccountID, a.APIToken = r.APIToken;
+              if (!n.init || !0 !== n.init) {
+                if (n.Email && n.GlobalAPIKey) {
+                  s.Email = n.Email, s.GlobalAPIKey = n.GlobalAPIKey;
+                } else if (n.AccountID && n.APIToken) {
+                  s.AccountID = n.AccountID, s.APIToken = n.APIToken;
                 } else {
-                  if (!r.UsageAPI) {
+                  if (!n.UsageAPI) {
                     return new Response(
                       JSON.stringify({ error: "配置不完整" }),
                       {
@@ -1277,11 +1277,11 @@ export default {
                       },
                     );
                   }
-                  a.UsageAPI = r.UsageAPI;
+                  s.UsageAPI = n.UsageAPI;
                 }
               }
-              return await n.KV.put("cf.json", JSON.stringify(a, null, 2)),
-                s.waitUntil(F(n, e, _, "Save_Config", t)),
+              return await env.KV.put("cf.json", JSON.stringify(s, null, 2)),
+                ctx.waitUntil(F(env, t, j, "Save_Config", e)),
                 new Response(
                   JSON.stringify({ success: !0, message: "配置已保存" }),
                   {
@@ -1303,14 +1303,14 @@ export default {
                   },
                 );
             }
-          } else if ("admin/tg.json" === H) {
+          } else if ("admin/tg.json" === k) {
             try {
-              const r = await e.json();
-              if (r.init && !0 === r.init) {
+              const n = await t.json();
+              if (n.init && !0 === n.init) {
                 const e = { BotToken: null, ChatID: null };
-                await n.KV.put("tg.json", JSON.stringify(e, null, 2));
+                await env.KV.put("tg.json", JSON.stringify(e, null, 2));
               } else {
-                if (!r.BotToken || !r.ChatID) {
+                if (!n.BotToken || !n.ChatID) {
                   return new Response(JSON.stringify({ error: "配置不完整" }), {
                     status: 400,
                     headers: {
@@ -1318,9 +1318,9 @@ export default {
                     },
                   });
                 }
-                await n.KV.put("tg.json", JSON.stringify(r, null, 2));
+                await env.KV.put("tg.json", JSON.stringify(n, null, 2));
               }
-              return s.waitUntil(F(n, e, _, "Save_Config", t)),
+              return ctx.waitUntil(F(env, t, j, "Save_Config", e)),
                 new Response(
                   JSON.stringify({ success: !0, message: "配置已保存" }),
                   {
@@ -1343,7 +1343,7 @@ export default {
                 );
             }
           } else {
-            if ("admin/ADD.txt" !== r) {
+            if ("admin/ADD.txt" !== s) {
               return new Response(
                 JSON.stringify({ error: "不支持的POST请求路径" }),
                 {
@@ -1353,9 +1353,9 @@ export default {
               );
             }
             try {
-              const r = await e.text();
-              return await n.KV.put("ADD.txt", r),
-                s.waitUntil(F(n, e, _, "Save_Custom_IPs", t)),
+              const n = await t.text();
+              return await env.KV.put("ADD.txt", n),
+                ctx.waitUntil(F(env, t, j, "Save_Custom_IPs", e)),
                 new Response(
                   JSON.stringify({ success: !0, message: "自定义IP已保存" }),
                   {
@@ -1379,40 +1379,40 @@ export default {
             }
           }
         } else {
-          if ("admin/config.json" === H) {
-            return new Response(JSON.stringify(t, null, 2), {
+          if ("admin/config.json" === k) {
+            return new Response(JSON.stringify(e, null, 2), {
               status: 200,
               headers: { "Content-Type": "application/json" },
             });
           }
-          if ("admin/ADD.txt" === r) {
-            let s = await n.KV.get("ADD.txt") || "null";
-            return "null" == s &&
-              (s = (await q(
-                e,
-                t.优选订阅生成.本地IP库.随机数量,
-                t.优选订阅生成.本地IP库.指定端口,
-                "ss" !== t.协议类型 || t.SS.TLS,
+          if ("admin/ADD.txt" === s) {
+            let n = await env.KV.get("ADD.txt") || "null";
+            return "null" == n &&
+              (n = (await q(
+                t,
+                e.优选订阅生成.本地IP库.随机数量,
+                e.优选订阅生成.本地IP库.指定端口,
+                "ss" !== e.协议类型 || e.SS.TLS,
               ))[1]),
-              new Response(s, {
+              new Response(n, {
                 status: 200,
                 headers: {
                   "Content-Type": "text/plain;charset=utf-8",
-                  asn: e.cf.asn,
+                  asn: t.cf.asn,
                 },
               });
           }
-          if ("admin/cf.json" === H) {
-            return new Response(JSON.stringify(e.cf, null, 2), {
+          if ("admin/cf.json" === k) {
+            return new Response(JSON.stringify(t.cf, null, 2), {
               status: 200,
               headers: { "Content-Type": "application/json;charset=utf-8" },
             });
           }
         }
-        return s.waitUntil(F(n, e, _, "Admin_Login", t)),
-          fetch(f + "/admin" + a.search);
+        return ctx.waitUntil(F(env, t, j, "Admin_Login", e)),
+          fetch(h + "/admin" + n.search);
       }
-      if ("logout" === H || $.test(H)) {
+      if ("logout" === k || p.test(k)) {
         const e = new Response("重定向中...", {
           status: 302,
           headers: { Location: "/login" },
@@ -1423,220 +1423,220 @@ export default {
         ),
           e;
       }
-      if ("sub" === H) {
-        const r = await B(j + k),
-          i = ["1", "true"].includes(n.BEST_SUB) &&
-            "example.com" === a.searchParams.get("host") &&
+      if ("sub" === k) {
+        const s = await B(A + $),
+          a = ["1", "true"].includes(env.BEST_SUB) &&
+            "example.com" === n.searchParams.get("host") &&
             "00000000-0000-4000-8000-000000000000" ===
-              a.searchParams.get("uuid") &&
-            o.toLowerCase().includes("tunnel (https://github.com/cmliu/edge");
-        if (a.searchParams.get("token") === r || i) {
-          t = await G(n, j, k, o),
-            i
-              ? s.waitUntil(F(n, e, _, "Get_Best_SUB", t, !1))
-              : s.waitUntil(F(n, e, _, "Get_SUB", t));
-          const c = o.toLowerCase(),
-            l = 4102329600,
-            u = Date.now(),
-            d = new Date(u);
-          d.setHours(0, 0, 0, 0);
-          const h = Math.floor(
-            (u - d.getTime()) / 864e5 * 24 * 1099511627776 / 2,
+              n.searchParams.get("uuid") &&
+            r.toLowerCase().includes("tunnel (https://github.com/cmliu/edge");
+        if (n.searchParams.get("token") === s || a) {
+          e = await G(env, A, $, r),
+            a
+              ? ctx.waitUntil(F(env, t, j, "Get_Best_SUB", e, !1))
+              : ctx.waitUntil(F(env, t, j, "Get_SUB", e));
+          const o = r.toLowerCase(),
+            i = 4102329600,
+            c = Date.now(),
+            l = new Date(c);
+          l.setHours(0, 0, 0, 0);
+          const u = Math.floor(
+            (c - l.getTime()) / 864e5 * 24 * 1099511627776 / 2,
           );
-          let f = h, p = h, g = 26388279066624;
-          t.CF.Usage.success &&
-            (f = t.CF.Usage.pages,
-              p = t.CF.Usage.workers,
-              g = Number.isFinite(t.CF.Usage.max)
-                ? t.CF.Usage.max / 1e3 * 1024
+          let d = u, h = u, f = 26388279066624;
+          e.CF.Usage.success &&
+            (d = e.CF.Usage.pages,
+              h = e.CF.Usage.workers,
+              f = Number.isFinite(e.CF.Usage.max)
+                ? e.CF.Usage.max / 1e3 * 1024
                 : 102400);
-          const w = {
+          const p = {
               "content-type": "text/plain; charset=utf-8",
-              "Profile-Update-Interval": t.优选订阅生成.SUBUpdateTime,
-              "Profile-web-page-url": a.protocol + "//" + a.host + "/admin",
+              "Profile-Update-Interval": e.优选订阅生成.SUBUpdateTime,
+              "Profile-web-page-url": n.protocol + "//" + n.host + "/admin",
               "Subscription-Userinfo":
-                `upload=${f}; download=${p}; total=${g}; expire=${l}`,
+                `upload=${d}; download=${h}; total=${f}; expire=${i}`,
               "Cache-Control": "no-store",
             },
-            m = a.searchParams.has("b64") || a.searchParams.has("base64") ||
-              e.headers.get("subconverter-request") ||
-              e.headers.get("subconverter-version") ||
-              c.includes("subconverter") ||
-              c.includes("CF-Workers-SUB".toLowerCase()) || i,
-            y = m
+            g = n.searchParams.has("b64") || n.searchParams.has("base64") ||
+              t.headers.get("subconverter-request") ||
+              t.headers.get("subconverter-version") ||
+              o.includes("subconverter") ||
+              o.includes("CF-Workers-SUB".toLowerCase()) || a,
+            w = g
               ? "mixed"
-              : a.searchParams.has("target")
-              ? a.searchParams.get("target")
-              : a.searchParams.has("clash") || c.includes("clash") ||
-                  c.includes("meta") || c.includes("mihomo")
+              : n.searchParams.has("target")
+              ? n.searchParams.get("target")
+              : n.searchParams.has("clash") || o.includes("clash") ||
+                  o.includes("meta") || o.includes("mihomo")
               ? "clash"
-              : a.searchParams.has("sb") || a.searchParams.has("singbox") ||
-                  c.includes("singbox") || c.includes("sing-box")
+              : n.searchParams.has("sb") || n.searchParams.has("singbox") ||
+                  o.includes("singbox") || o.includes("sing-box")
               ? "singbox"
-              : a.searchParams.has("surge") || c.includes("surge")
+              : n.searchParams.has("surge") || o.includes("surge")
               ? "surge&ver=4"
-              : a.searchParams.has("quanx") || c.includes("quantumult")
+              : n.searchParams.has("quanx") || o.includes("quantumult")
               ? "quanx"
-              : a.searchParams.has("loon") || c.includes("loon")
+              : n.searchParams.has("loon") || o.includes("loon")
               ? "loon"
               : "mixed";
-          c.includes("mozilla") ||
-            (w["Content-Disposition"] = `attachment; filename*=utf-8''${
-              encodeURIComponent(t.优选订阅生成.SUBNAME)
+          o.includes("mozilla") ||
+            (p["Content-Disposition"] = `attachment; filename*=utf-8''${
+              encodeURIComponent(e.优选订阅生成.SUBNAME)
             }`);
-          const b = (a.searchParams.has("surge") || c.includes("surge")) &&
-              "ss" !== t.协议类型
+          const m = (n.searchParams.has("surge") || o.includes("surge")) &&
+              "ss" !== e.协议类型
             ? "trojan"
-            : t.协议类型;
-          let S = "";
-          if ("mixed" === y) {
-            const s = "Shadowrocket" == t.TLS分片
+            : e.协议类型;
+          let y = "";
+          if ("mixed" === w) {
+            const s = "Shadowrocket" == e.TLS分片
               ? `&fragment=${encodeURIComponent("1,40-60,30-50,tlshello")}`
-              : "Happ" == t.TLS分片
+              : "Happ" == e.TLS分片
               ? `&fragment=${encodeURIComponent("3,1,tlshello")}`
               : "";
-            let r = [], o = "", l = [];
-            if (!a.searchParams.has("sub") && t.优选订阅生成.local) {
-              const s = t.优选订阅生成.本地IP库.随机IP
+            let r = [], i = "", c = [];
+            if (!n.searchParams.has("sub") && e.优选订阅生成.local) {
+              const n = e.优选订阅生成.本地IP库.随机IP
                   ? (await q(
-                    e,
-                    t.优选订阅生成.本地IP库.随机数量,
-                    t.优选订阅生成.本地IP库.指定端口,
-                    "ss" !== b || t.SS.TLS,
+                    t,
+                    e.优选订阅生成.本地IP库.随机数量,
+                    e.优选订阅生成.本地IP库.指定端口,
+                    "ss" !== m || e.SS.TLS,
                   ))[0]
-                  : await n.KV.get("ADD.txt")
-                  ? await V(await n.KV.get("ADD.txt"))
+                  : await env.KV.get("ADD.txt")
+                  ? await V(await env.KV.get("ADD.txt"))
                   : (await q(
-                    e,
-                    t.优选订阅生成.本地IP库.随机数量,
-                    t.优选订阅生成.本地IP库.指定端口,
-                    "ss" !== b || t.SS.TLS,
+                    t,
+                    e.优选订阅生成.本地IP库.随机数量,
+                    e.优选订阅生成.本地IP库.指定端口,
+                    "ss" !== m || e.SS.TLS,
                   ))[0],
+                s = [],
                 a = [],
-                i = [],
-                c = [];
-              for (const e of s) {
-                if (e.toLowerCase().startsWith("sub://")) a.push(e);
+                o = [];
+              for (const e of n) {
+                if (e.toLowerCase().startsWith("sub://")) s.push(e);
                 else {
                   const t = e.match(/sub\s*=\s*([^\s&#]+)/i);
                   if (t && t[1].trim().includes(".")) {
                     e.toLowerCase().includes("proxyip=true")
-                      ? a.push(
+                      ? s.push(
                         "sub://" + t[1].trim() + "?proxyip=true" +
                           (e.includes("#") ? "#" + e.split("#")[1] : ""),
                       )
-                      : a.push(
+                      : s.push(
                         "sub://" + t[1].trim() +
                           (e.includes("#") ? "#" + e.split("#")[1] : ""),
                       );
-                  } else if (e.toLowerCase().startsWith("https://")) a.push(e);
+                  } else if (e.toLowerCase().startsWith("https://")) s.push(e);
                   else if (e.toLowerCase().includes("://")) {
                     if (e.includes("#")) {
                       const t = e.split("#");
-                      c.push(
+                      o.push(
                         t[0] + "#" +
                           encodeURIComponent(decodeURIComponent(t[1])),
                       );
-                    } else c.push(e);
-                  } else i.push(e);
+                    } else o.push(e);
+                  } else a.push(e);
                 }
               }
-              const u = await X(a, "ss" !== b || t.SS.TLS ? "443" : "80"),
-                d = [...new Set(c.concat(u[1]))];
-              o = d.length > 0 ? d.join("\n") + "\n" : "";
-              const h = u[0];
-              l = u[3] || [], r = [...new Set(i.concat(h))];
+              const l = await X(s, "ss" !== m || e.SS.TLS ? "443" : "80"),
+                u = [...new Set(o.concat(l[1]))];
+              i = u.length > 0 ? u.join("\n") + "\n" : "";
+              const d = l[0];
+              c = l[3] || [], r = [...new Set(a.concat(d))];
             } else {
-              let e = a.searchParams.get("sub") || t.优选订阅生成.SUB;
-              const [n, s] = await z(e);
-              r = r.concat(n), o += s;
+              let t = n.searchParams.get("sub") || e.优选订阅生成.SUB;
+              const [s, a] = await z(t);
+              r = r.concat(s), i += a;
             }
-            const u = t.ECH
+            const l = e.ECH
                 ? `&ech=${
                   encodeURIComponent(
-                    (t.ECHConfig.SNI ? t.ECHConfig.SNI + "+" : "") +
-                      t.ECHConfig.DNS,
+                    (e.ECHConfig.SNI ? e.ECHConfig.SNI + "+" : "") +
+                      e.ECHConfig.DNS,
                   )
                 }`
                 : "",
-              d = c.includes("loon") || c.includes("surge"),
-              h = "xhttp" === t.传输协议
+              u = o.includes("loon") || o.includes("surge"),
+              d = "xhttp" === e.传输协议
                 ? "xhttp&mode=stream-one"
-                : "grpc" === t.传输协议
-                ? "multi" === t.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
+                : "grpc" === e.传输协议
+                ? "multi" === e.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
                 : "ws";
-            let f = "path", p = "host";
-            "grpc" === t.传输协议 && (f = "serviceName", p = "authority"),
-              S = o + r.map((e) => {
-                const n = e.match(
+            let h = "path", f = "host";
+            "grpc" === e.传输协议 && (h = "serviceName", f = "authority"),
+              y = i + r.map((t) => {
+                const n = t.match(
                   /^(\[[\da-fA-F:]+\]|[\d.]+|[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*)(?::(\d+))?(?:#(.+))?$/,
                 );
-                let r, a, o = "443";
+                let r, o, i = "443";
                 if (!n) {
-                  return console.warn(`[订阅内容] 不规范的IP格式已忽略: ${e}`),
+                  return console.warn(`[订阅内容] 不规范的IP格式已忽略: ${t}`),
                     null;
                 }
                 r = n[1],
-                  o = n[2] ? n[2] : "ss" !== b || t.SS.TLS ? "443" : "80",
-                  a = n[3] || r;
-                let c = t.完整节点路径;
-                if (l.length > 0) {
-                  const e = l.find((e) => e.includes(r));
-                  e &&
-                    (c = `${t.PATH}/proxyip=${e}`.replace(/\/\//g, "/") +
-                      (t.启用0RTT ? "?ed=2560" : ""));
+                  i = n[2] ? n[2] : "ss" !== m || e.SS.TLS ? "443" : "80",
+                  o = n[3] || r;
+                let p = e.完整节点路径;
+                if (c.length > 0) {
+                  const t = c.find((e) => e.includes(r));
+                  t &&
+                    (p = `${e.PATH}/proxyip=${t}`.replace(/\/\//g, "/") +
+                      (e.启用0RTT ? "?ed=2560" : ""));
                 }
-                return d && (c = c.replace(/,/g, "%2C")),
-                  "ss" !== b || i
-                    ? `${b}://00000000-0000-4000-8000-000000000000@${r}:${o}?security=tls&type=${
-                      h + u
-                    }&${p}=example.com&fp=${t.Fingerprint}&sni=example.com&${f}=${
-                      encodeURIComponent(i ? "/" : t.随机路径 ? K(c) : c) + s
+                return u && (p = p.replace(/,/g, "%2C")),
+                  "ss" !== m || a
+                    ? `${m}://00000000-0000-4000-8000-000000000000@${r}:${i}?security=tls&type=${
+                      d + l
+                    }&${f}=example.com&fp=${e.Fingerprint}&sni=example.com&${h}=${
+                      encodeURIComponent(a ? "/" : e.随机路径 ? K(p) : p) + s
                     }&encryption=none${
-                      t.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""
-                    }#${encodeURIComponent(a)}`
-                    : (c = (c.includes("?")
-                      ? c.replace("?", "?enc=" + t.SS.加密方式 + "&")
-                      : c + "?enc=" + t.SS.加密方式).replace(/([=,])/g, "\\$1"),
-                      m || (c += ";mux=0"),
-                      `${b}://${
+                      e.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""
+                    }#${encodeURIComponent(o)}`
+                    : (p = (p.includes("?")
+                      ? p.replace("?", "?enc=" + e.SS.加密方式 + "&")
+                      : p + "?enc=" + e.SS.加密方式).replace(/([=,])/g, "\\$1"),
+                      g || (p += ";mux=0"),
+                      `${m}://${
                         btoa(
-                          t.SS.加密方式 +
+                          e.SS.加密方式 +
                             ":00000000-0000-4000-8000-000000000000",
                         )
-                      }@${r}:${o}?plugin=v2${
+                      }@${r}:${i}?plugin=v2${
                         encodeURIComponent(
                           "ray-plugin;mode=websocket;host=example.com;path=" +
-                            (t.随机路径 ? K(c) : c) + (t.SS.TLS ? ";tls" : ""),
-                        ) + u + s
-                      }#${encodeURIComponent(a)}`);
+                            (e.随机路径 ? K(p) : p) + (e.SS.TLS ? ";tls" : ""),
+                        ) + l + s
+                      }#${encodeURIComponent(o)}`);
               }).filter((e) => null !== e).join("\n");
           } else {
-            const e = `${t.订阅转换配置.SUBAPI}/sub?target=${y}&url=${
+            const t = `${e.订阅转换配置.SUBAPI}/sub?target=${w}&url=${
               encodeURIComponent(
-                a.protocol + "//" + a.host + "/sub?target=mixed&token=" + r +
-                  (a.searchParams.has("sub") && "" != a.searchParams.get("sub")
-                    ? `&sub=${a.searchParams.get("sub")}`
+                n.protocol + "//" + n.host + "/sub?target=mixed&token=" + s +
+                  (n.searchParams.has("sub") && "" != n.searchParams.get("sub")
+                    ? `&sub=${n.searchParams.get("sub")}`
                     : ""),
               )
             }&config=${
-              encodeURIComponent(t.订阅转换配置.SUBCONFIG)
-            }&emoji=${t.订阅转换配置.SUBEMOJI}&scv=${t.跳过证书验证}`;
+              encodeURIComponent(e.订阅转换配置.SUBCONFIG)
+            }&emoji=${e.订阅转换配置.SUBEMOJI}&scv=${e.跳过证书验证}`;
             try {
-              const n = await fetch(e, {
+              const r = await fetch(t, {
                 headers: {
-                  "User-Agent": "Subconverter for " + y +
+                  "User-Agent": "Subconverter for " + w +
                     " edgetunnel (https://github.com/cmliu/edgetunnel)",
                 },
               });
-              if (!n.ok) {
-                return new Response("订阅转换后端异常：" + n.statusText, {
-                  status: n.status,
+              if (!r.ok) {
+                return new Response("订阅转换后端异常：" + r.statusText, {
+                  status: r.status,
                 });
               }
-              S = await n.text(),
-                (a.searchParams.has("surge") || c.includes("surge")) &&
-                (S = function (e, t, n) {
+              y = await r.text(),
+                (n.searchParams.has("surge") || o.includes("surge")) &&
+                (y = function (e, t, n) {
                   const s = e.includes("\r\n")
                       ? e.split("\r\n")
                       : e.split("\n"),
@@ -1664,9 +1664,9 @@ export default {
                     } strict=false` + a.substring(a.indexOf("\n")),
                     a;
                 }(
-                  S,
-                  a.protocol + "//" + a.host + "/sub?token=" + r + "&surge",
-                  t,
+                  y,
+                  n.protocol + "//" + n.host + "/sub?token=" + s + "&surge",
+                  e,
                 ));
             } catch (e) {
               return new Response("订阅转换后端异常：" + e.message, {
@@ -1674,8 +1674,8 @@ export default {
               });
             }
           }
-          return c.includes("subconverter") || i ||
-            (S = function (e, t, n = 2) {
+          return o.includes("subconverter") || a ||
+            (y = function (e, t, n = 2) {
               const s = [...t].sort(() => Math.random() - .5),
                 r = "abcdefghijklmnopqrstuvwxyz0123456789";
               let a = 0, o = null;
@@ -1697,19 +1697,19 @@ export default {
                 return a++, o;
               });
             }(
-              S.replace(/00000000-0000-4000-8000-000000000000/g, t.UUID)
+              y.replace(/00000000-0000-4000-8000-000000000000/g, e.UUID)
                 .replace(
                   /MDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAw/g,
-                  btoa(t.UUID),
+                  btoa(e.UUID),
                 ),
-              t.HOSTS,
+              e.HOSTS,
             )),
-            "mixed" !== y ||
-            c.includes("mozilla") && !a.searchParams.has("b64") &&
-              !a.searchParams.has("base64") ||
-            (S = btoa(S)),
-            "singbox" === y
-              ? (S = await async function (e, t = {}) {
+            "mixed" !== w ||
+            o.includes("mozilla") && !n.searchParams.has("b64") &&
+              !n.searchParams.has("base64") ||
+            (y = btoa(y)),
+            "singbox" === w
+              ? (y = await async function (e, t = {}) {
                 const n = t?.UUID || null,
                   s = t?.Fingerprint || "chrome",
                   r = t?.ECHConfig?.SNI || t?.HOST || null,
@@ -1882,9 +1882,9 @@ export default {
                   return console.error("Singbox热补丁执行失败:", e),
                     JSON.stringify(JSON.parse(o), null, 2);
                 }
-              }(S, t),
-                w["content-type"] = "application/json; charset=utf-8")
-              : "clash" === y && (S = function (e, t = {}) {
+              }(y, e),
+                p["content-type"] = "application/json; charset=utf-8")
+              : "clash" === w && (y = function (e, t = {}) {
                 const n = t?.UUID || null,
                   s = Boolean(t?.ECH),
                   r = Array.isArray(t?.HOSTS) ? [...t.HOSTS] : [],
@@ -2079,30 +2079,30 @@ export default {
                   } else C.push(e), A++;
                 }
                 return C.join("\n");
-              }(S, t),
-                w["content-type"] = "application/x-yaml; charset=utf-8"),
-            new Response(S, { status: 200, headers: w });
+              }(y, e),
+                p["content-type"] = "application/x-yaml; charset=utf-8"),
+            new Response(y, { status: 200, headers: p });
         }
-      } else if ("locations" === H) {
-        const t = e.headers.get("Cookie") || "",
-          n = t.split(";").find((e) => e.trim().startsWith("auth="))?.split(
+      } else if ("locations" === k) {
+        const e = t.headers.get("Cookie") || "",
+          n = e.split(";").find((e) => e.trim().startsWith("auth="))?.split(
             "=",
           )[1];
-        if (n && n == await B(o + p + l)) {
+        if (n && n == await B(r + c + i)) {
           return fetch(
             new Request("https://speed.cloudflare.com/locations", {
               headers: { Referer: "https://speed.cloudflare.com/" },
             }),
           );
         }
-      } else if ("robots.txt" === H) {
+      } else if ("robots.txt" === k) {
         return new Response("User-agent: *\nDisallow: /", {
           status: 200,
           headers: { "Content-Type": "text/plain; charset=UTF-8" },
         });
       }
-    } else if (!A) {
-      return fetch(f + "/noKV").then((e) => {
+    } else if (!S) {
+      return fetch(h + "/noKV").then((e) => {
         const t = new Headers(e.headers);
         return t.set(
           "Cache-Control",
@@ -2117,20 +2117,20 @@ export default {
           });
       });
     }
-    let W = n.URL || "nginx";
-    if (W && "nginx" !== W && "1101" !== W) {
-      W = W.trim().replace(/\/$/, ""),
-        W.match(/^https?:\/\//i) || (W = "https://" + W),
-        W.toLowerCase().startsWith("http://") &&
-        (W = "https://" + W.substring(7));
+    let H = env.URL || "nginx";
+    if (H && "nginx" !== H && "1101" !== H) {
+      H = H.trim().replace(/\/$/, ""),
+        H.match(/^https?:\/\//i) || (H = "https://" + H),
+        H.toLowerCase().startsWith("http://") &&
+        (H = "https://" + H.substring(7));
       try {
-        const e = new URL(W);
-        W = e.protocol + "//" + e.host;
+        const e = new URL(H);
+        H = e.protocol + "//" + e.host;
       } catch (e) {
-        W = "nginx";
+        H = "nginx";
       }
     }
-    if ("1101" === W) {
+    if ("1101" === H) {
       return new Response(
         await async function (e, t) {
           const n = new Date(),
@@ -2144,7 +2144,7 @@ export default {
               e.toString(16).padStart(2, "0")
             ).join("");
           return `<!DOCTYPE html>\n\x3c!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]--\x3e\n\x3c!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]--\x3e\n\x3c!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]--\x3e\n\x3c!--[if gt IE 8]>\x3c!--\x3e <html class="no-js" lang="en-US"> \x3c!--<![endif]--\x3e\n<head>\n<title>Worker threw exception | ${e} | Cloudflare</title>\n<meta charset="UTF-8" />\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n<meta http-equiv="X-UA-Compatible" content="IE=Edge" />\n<meta name="robots" content="noindex, nofollow" />\n<meta name="viewport" content="width=device-width,initial-scale=1" />\n<link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/cf.errors.css" />\n\x3c!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" /><![endif]--\x3e\n<style>body{margin:0;padding:0}</style>\n\n\n\x3c!--[if gte IE 10]>\x3c!--\x3e\n<script>\n  if (!navigator.cookieEnabled) {\n    window.addEventListener('DOMContentLoaded', function () {\n      var cookieEl = document.getElementById('cookie-alert');\n      cookieEl.style.display = 'block';\n    })\n  }\n<\/script>\n\x3c!--<![endif]--\x3e\n\n</head>\n<body>\n    <div id="cf-wrapper">\n        <div class="cf-alert cf-alert-error cf-cookie-error" id="cookie-alert" data-translate="enable_cookies">Please enable cookies.</div>\n        <div id="cf-error-details" class="cf-error-details-wrapper">\n            <div class="cf-wrapper cf-header cf-error-overview">\n                <h1>\n                    <span class="cf-error-type" data-translate="error">Error</span>\n                    <span class="cf-error-code">1101</span>\n                    <small class="heading-ray-id">Ray ID: ${r} &bull; ${s} UTC</small>\n                </h1>\n                <h2 class="cf-subheadline" data-translate="error_desc">Worker threw exception</h2>\n            </div>\x3c!-- /.header --\x3e\n    \n            <section></section>\x3c!-- spacer --\x3e\n    \n            <div class="cf-section cf-wrapper">\n                <div class="cf-columns two">\n                    <div class="cf-column">\n                        <h2 data-translate="what_happened">What happened?</h2>\n                            <p>You've requested a page on a website (${e}) that is on the <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=error_100x" target="_blank">Cloudflare</a> network. An unknown error occurred while rendering the page.</p>\n                    </div>\n                    \n                    <div class="cf-column">\n                        <h2 data-translate="what_can_i_do">What can I do?</h2>\n                            <p><strong>If you are the owner of this website:</strong><br />refer to <a href="https://developers.cloudflare.com/workers/observability/errors/" target="_blank">Workers - Errors and Exceptions</a> and check Workers Logs for ${e}.</p>\n                    </div>\n                    \n                </div>\n            </div>\x3c!-- /.section --\x3e\n    \n            <div class="cf-error-footer cf-wrapper w-240 lg:w-full py-10 sm:py-4 sm:px-8 mx-auto text-center sm:text-left border-solid border-0 border-t border-gray-300">\n    <p class="text-13">\n      <span class="cf-footer-item sm:block sm:mb-1">Cloudflare Ray ID: <strong class="font-semibold"> ${r}</strong></span>\n      <span class="cf-footer-separator sm:hidden">&bull;</span>\n      <span id="cf-footer-item-ip" class="cf-footer-item hidden sm:block sm:mb-1">\n        Your IP:\n        <button type="button" id="cf-footer-ip-reveal" class="cf-footer-ip-reveal-btn">Click to reveal</button>\n        <span class="hidden" id="cf-footer-ip">${t}</span>\n        <span class="cf-footer-separator sm:hidden">&bull;</span>\n      </span>\n      <span class="cf-footer-item sm:block sm:mb-1"><span>Performance &amp; security by</span> <a rel="noopener noreferrer" href="https://www.cloudflare.com/5xx-error-landing" id="brand_link" target="_blank">Cloudflare</a></span>\n      \n    </p>\n    <script>(function(){function d(){var b=a.getElementById("cf-footer-item-ip"),c=a.getElementById("cf-footer-ip-reveal");b&&"classList"in b&&(b.classList.remove("hidden"),c.addEventListener("click",function(){c.classList.add("hidden");a.getElementById("cf-footer-ip").classList.remove("hidden")}))}var a=document;document.addEventListener&&a.addEventListener("DOMContentLoaded",d)})();<\/script>\n  </div>\x3c!-- /.error-footer --\x3e\n\n        </div>\x3c!-- /#cf-error-details --\x3e\n    </div>\x3c!-- /#cf-wrapper --\x3e\n\n     <script>\n    window._cf_translation = {};\n    \n    \n  <\/script> \n</body>\n</html>`;
-        }(a.host, _),
+        }(n.host, j),
         {
           status: 200,
           headers: { "Content-Type": "text/html; charset=UTF-8" },
@@ -2152,29 +2152,29 @@ export default {
       );
     }
     try {
-      const t = new URL(W), n = new Headers(e.headers);
-      n.set("Host", t.host),
-        n.set("Referer", t.origin),
-        n.set("Origin", t.origin),
-        !n.has("User-Agent") && o && "null" !== o && n.set("User-Agent", o);
-      const s = await fetch(t.origin + a.pathname + a.search, {
-          method: e.method,
-          headers: n,
-          body: e.body,
-          cf: e.cf,
+      const e = new URL(H), s = new Headers(t.headers);
+      s.set("Host", e.host),
+        s.set("Referer", e.origin),
+        s.set("Origin", e.origin),
+        !s.has("User-Agent") && r && "null" !== r && s.set("User-Agent", r);
+      const a = await fetch(e.origin + n.pathname + n.search, {
+          method: t.method,
+          headers: s,
+          body: t.body,
+          cf: t.cf,
         }),
-        r = s.headers.get("content-type") || "";
-      if (/text|javascript|json|xml/.test(r)) {
-        const e = (await s.text()).replaceAll(t.host, a.host);
-        return new Response(e, {
-          status: s.status,
+        o = a.headers.get("content-type") || "";
+      if (/text|javascript|json|xml/.test(o)) {
+        const t = (await a.text()).replaceAll(e.host, n.host);
+        return new Response(t, {
+          status: a.status,
           headers: {
-            ...Object.fromEntries(s.headers),
+            ...Object.fromEntries(a.headers),
             "Cache-Control": "no-store",
           },
         });
       }
-      return s;
+      return a;
     } catch (e) {}
     return new Response(
       await async function () {
@@ -2399,74 +2399,74 @@ async function L(e, t, n) {
     );
   return k(t), new Uint8Array(r);
 }
-async function E(t, i, c, d, f, g, w) {
-  M(`[TCP转发] 目标: ${t}:${i} | 反代IP: ${r} | 反代兜底: ${
-    u ? "是" : "否"
-  } | 反代类型: ${a || "proxyip"} | 全局: ${o ? "是" : "否"}`);
-  let m = !1;
-  async function y(e, t = 1e3) {
+async function E(e, o, i, u, h, f, g) {
+  M(`[TCP转发] 目标: ${e}:${o} | 反代IP: ${s} | 反代兜底: ${
+    l ? "是" : "否"
+  } | 反代类型: ${r || "proxyip"} | 全局: ${a ? "是" : "否"}`);
+  let w = !1;
+  async function m(e, t = 1e3) {
     await Promise.race([
       e.opened,
       new Promise((e, n) => setTimeout(() => n(new Error("连接超时")), t)),
     ]);
   }
-  async function b(t, n, s = null, r = null, a = !0) {
-    let o;
-    if (r && r.length > 0) {
-      for (let t = 0; t < r.length; t++) {
-        const n = (l + t) % r.length, [a, i] = r[n];
+  async function y(e, t, n = null, s = null, r = !0) {
+    let a;
+    if (s && s.length > 0) {
+      for (let e = 0; e < s.length; e++) {
+        const t = (c + e) % s.length, [r, o] = s[t];
         try {
           if (
-            M(`[反代连接] 尝试连接到: ${a}:${i} (索引: ${n})`),
-              o = e({ hostname: a, port: i }),
-              await y(o),
-              p(s) > 0
+            M(`[反代连接] 尝试连接到: ${r}:${o} (索引: ${t})`),
+              a = connect({ hostname: r, port: o }),
+              await m(a),
+              p(n) > 0
           ) {
-            const e = o.writable.getWriter();
-            await e.write(s), e.releaseLock();
+            const e = a.writable.getWriter();
+            await e.write(n), e.releaseLock();
           }
-          return M(`[反代连接] 成功连接到: ${a}:${i}`), l = n, o;
+          return M(`[反代连接] 成功连接到: ${r}:${o}`), c = t, a;
         } catch (e) {
-          M(`[反代连接] 连接失败: ${a}:${i}, 错误: ${e.message}`);
+          M(`[反代连接] 连接失败: ${r}:${o}, 错误: ${e.message}`);
           try {
-            o?.close?.();
+            a?.close?.();
           } catch (e) {}
           continue;
         }
       }
     }
-    if (a) {
-      if (o = e({ hostname: t, port: n }), await y(o), p(s) > 0) {
-        const e = o.writable.getWriter();
-        await e.write(s), e.releaseLock();
+    if (r) {
+      if (a = connect({ hostname: e, port: t }), await m(a), p(n) > 0) {
+        const e = a.writable.getWriter();
+        await e.write(n), e.releaseLock();
       }
-      return o;
+      return a;
     }
-    throw O(d),
+    throw O(u),
       new Error("[反代连接] 所有反代连接失败，且未启用反代兜底，连接终止。");
   }
-  async function S(e = !0) {
-    if (g.connectingPromise) return void await g.connectingPromise;
-    const o = e && !m && p(c) > 0,
-      l = o ? c : null,
-      h = (async () => {
-        let e;
-        if ("socks5" === a) {
-          M(`[SOCKS5代理] 代理到: ${t}:${i}`), e = await H(t, i, l);
-        } else if ("http" === a) {
-          M(`[HTTP代理] 代理到: ${t}:${i}`), e = await _(t, i, l);
-        } else if ("https" === a) {
-          M(`[HTTPS代理] 代理到: ${t}:${i}`), e = await _(t, i, l, !0);
+  async function b(a = !0) {
+    if (f.connectingPromise) return void await f.connectingPromise;
+    const c = a && !w && p(i) > 0,
+      d = c ? i : null,
+      m = (async () => {
+        let a;
+        if ("socks5" === r) {
+          M(`[SOCKS5代理] 代理到: ${e}:${o}`), a = await H(e, o, d);
+        } else if ("http" === r) {
+          M(`[HTTP代理] 代理到: ${e}:${o}`), a = await _(e, o, d);
+        } else if ("https" === r) {
+          M(`[HTTPS代理] 代理到: ${e}:${o}`), a = await _(e, o, d, !0);
         } else {
-          M(`[反代连接] 代理到: ${t}:${i}`);
-          const a = await async function (
+          M(`[反代连接] 代理到: ${e}:${o}`);
+          const r = await async function (
             e,
-            t = "dash.cloudflare.com",
+            s = "dash.cloudflare.com",
             r = "00000000-0000-4000-8000-000000000000",
           ) {
-            if (n && s && n === e) {
-              M(`[反代解析] 读取缓存 总数: ${s.length}个\n${
-                s.map(([e, t], n) => `${n + 1}. ${e}:${t}`).join("\n")
+            if (t && n && t === e) {
+              M(`[反代解析] 读取缓存 总数: ${n.length}个\n${
+                n.map(([e, t], n) => `${n + 1}. ${e}:${t}`).join("\n")
               }`);
             } else {
               function a(e) {
@@ -2545,74 +2545,74 @@ async function E(t, i, c, d, f, g, w) {
                 }
               }
               const c = i.sort((e, t) => e[0].localeCompare(t[0])),
-                l = t.includes(".") ? t.split(".").slice(-2).join(".") : t;
+                l = s.includes(".") ? s.split(".").slice(-2).join(".") : s;
               let u = [...l + r].reduce((e, t) => e + t.charCodeAt(0), 0);
               M(`[反代解析] 随机种子: ${u}\n目标站点: ${l}`);
               const d = [...c].sort(() =>
                 (u = 1103515245 * u + 12345 & 2147483647) / 2147483647 - .5
               );
-              s = d.slice(0, 8),
-                M(`[反代解析] 解析完成 总数: ${s.length}个\n${
-                  s.map(([e, t], n) => `${n + 1}. ${e}:${t}`).join("\n")
+              n = d.slice(0, 8),
+                M(`[反代解析] 解析完成 总数: ${n.length}个\n${
+                  n.map(([e, t], n) => `${n + 1}. ${e}:${t}`).join("\n")
                 }`),
-                n = e;
+                t = e;
             }
-            return s;
-          }(r, t, w);
-          e = await b(atob("UFJPWFlJUC50cDEuMDkwMjI3Lnh5eg=="), 1, l, a, u);
+            return n;
+          }(s, e, g);
+          a = await y(atob("UFJPWFlJUC50cDEuMDkwMjI3Lnh5eg=="), 1, d, r, l);
         }
-        o && (m = !0),
-          g.socket = e,
-          e.closed.catch(() => {}).finally(() => O(d)),
-          j(e, d, f, null);
+        c && (w = !0),
+          f.socket = a,
+          a.closed.catch(() => {}).finally(() => O(u)),
+          j(a, u, h, null);
       })();
-    g.connectingPromise = h;
+    f.connectingPromise = m;
     try {
-      await h;
+      await m;
     } finally {
-      g.connectingPromise === h && (g.connectingPromise = null);
+      f.connectingPromise === m && (f.connectingPromise = null);
     }
   }
-  g.retryConnect = async () => S(!m);
+  f.retryConnect = async () => b(!w);
   if (
-    a &&
-    (o ||
-      ($ = t,
-        h.some((e) => new RegExp(`^${e.replace(/\*/g, ".*")}$`, "i").test($))))
+    r &&
+    (a ||
+      (S = e,
+        d.some((e) => new RegExp(`^${e.replace(/\*/g, ".*")}$`, "i").test(S))))
   ) {
     M("[TCP转发] 启用 SOCKS5/HTTP/HTTPS 全局代理");
     try {
-      await S();
+      await b();
     } catch (e) {
       throw M(`[TCP转发] SOCKS5/HTTP/HTTPS 代理连接失败: ${e.message}`), e;
     }
   } else {try {
-      M(`[TCP转发] 尝试直连到: ${t}:${i}`);
-      const e = await b(t, i, c);
-      g.socket = e,
-        j(e, d, f, async () => {
-          g.socket === e && await S();
+      M(`[TCP转发] 尝试直连到: ${e}:${o}`);
+      const t = await y(e, o, i);
+      f.socket = t,
+        j(t, u, h, async () => {
+          f.socket === t && await b();
         });
-    } catch (e) {
-      M(`[TCP转发] 直连 ${t}:${i} 失败: ${e.message}`), await S();
+    } catch (t) {
+      M(`[TCP转发] 直连 ${e}:${o} 失败: ${t.message}`), await b();
     }}
-  var $;
+  var S;
 }
-async function v(t, n, s) {
+async function v(e, t, n) {
   try {
-    const r = e({ hostname: "8.8.4.4", port: 53 });
-    let a = s;
-    const o = r.writable.getWriter();
-    await o.write(t),
-      o.releaseLock(),
-      await r.readable.pipeTo(
+    const s = connect({ hostname: "8.8.4.4", port: 53 });
+    let r = n;
+    const a = s.writable.getWriter();
+    await a.write(e),
+      a.releaseLock(),
+      await s.readable.pipeTo(
         new WritableStream({
           async write(e) {
-            if (n.readyState === WebSocket.OPEN) {
-              if (a) {
-                const t = new Uint8Array(a.length + e.byteLength);
-                t.set(a, 0), t.set(e, a.length), await R(n, t.buffer), a = null;
-              } else await R(n, e);
+            if (t.readyState === WebSocket.OPEN) {
+              if (r) {
+                const n = new Uint8Array(r.length + e.byteLength);
+                n.set(r, 0), n.set(e, r.length), await R(t, n.buffer), r = null;
+              } else await R(t, e);
             }
           },
         }),
@@ -2735,38 +2735,110 @@ function N(e) {
   for (const n of t) if (e.endsWith("." + n) || e === n) return !0;
   return !1;
 }
-async function H(t, n, s) {
-  const { username: r, password: a, hostname: o, port: i } = c,
-    l = e({ hostname: o, port: i }),
-    u = l.writable.getWriter(),
-    d = l.readable.getReader();
+async function H(e, t, n) {
+  const { username: s, password: r, hostname: a, port: o } = i,
+    c = connect({ hostname: a, port: o }),
+    l = c.writable.getWriter(),
+    u = c.readable.getReader();
   try {
-    const e = r && a ? new Uint8Array([5, 2, 0, 2]) : new Uint8Array([5, 1, 0]);
-    await u.write(e);
-    let o = await d.read();
+    const a = s && r ? new Uint8Array([5, 2, 0, 2]) : new Uint8Array([5, 1, 0]);
+    await l.write(a);
+    let o = await u.read();
     if (o.done || o.value.byteLength < 2) {
       throw new Error("S5 method selection failed");
     }
     const i = new Uint8Array(o.value)[1];
     if (2 === i) {
-      if (!r || !a) throw new Error("S5 requires authentication");
-      const e = (new TextEncoder()).encode(r),
-        t = (new TextEncoder()).encode(a),
+      if (!s || !r) throw new Error("S5 requires authentication");
+      const e = (new TextEncoder()).encode(s),
+        t = (new TextEncoder()).encode(r),
         n = new Uint8Array([1, e.length, ...e, t.length, ...t]);
       if (
-        await u.write(n),
-          o = await d.read(),
+        await l.write(n),
+          o = await u.read(),
           o.done || 0 !== new Uint8Array(o.value)[1]
       ) throw new Error("S5 authentication failed");
     } else if (0 !== i) throw new Error(`S5 unsupported auth method: ${i}`);
-    const c = (new TextEncoder()).encode(t),
-      h = new Uint8Array([5, 1, 0, 3, c.length, ...c, n >> 8, 255 & n]);
+    const d = (new TextEncoder()).encode(e),
+      h = new Uint8Array([5, 1, 0, 3, d.length, ...d, t >> 8, 255 & t]);
     if (
-      await u.write(h),
-        o = await d.read(),
+      await l.write(h),
+        o = await u.read(),
         o.done || 0 !== new Uint8Array(o.value)[1]
     ) throw new Error("S5 connection failed");
-    return p(s) > 0 && await u.write(s), u.releaseLock(), d.releaseLock(), l;
+    return p(n) > 0 && await l.write(n), l.releaseLock(), u.releaseLock(), c;
+  } catch (e) {
+    try {
+      l.releaseLock();
+    } catch (e) {}
+    try {
+      u.releaseLock();
+    } catch (e) {}
+    try {
+      c.close();
+    } catch (e) {}
+    throw e;
+  }
+}
+async function _(e, t, n, s = !1) {
+  const { username: r, password: a, hostname: o, port: c } = i,
+    l = s
+      ? connect({ hostname: o, port: c }, {
+        secureTransport: "on",
+        allowHalfOpen: !1,
+      })
+      : connect({ hostname: o, port: c }),
+    u = l.writable.getWriter(),
+    d = l.readable.getReader(),
+    h = new TextEncoder(),
+    f = new TextDecoder();
+  try {
+    s && await l.opened;
+    const o = `CONNECT ${e}:${t} HTTP/1.1\r\nHost: ${e}:${t}\r\n${
+      r && a ? `Proxy-Authorization: Basic ${btoa(`${r}:${a}`)}\r\n` : ""
+    }User-Agent: Mozilla/5.0\r\nConnection: keep-alive\r\n\r\n`;
+    await u.write(h.encode(o)), u.releaseLock();
+    let i = new Uint8Array(0), c = -1, g = 0;
+    for (; -1 === c && g < 8192;) {
+      const { done: e, value: t } = await d.read();
+      if (e || !t) {
+        throw new Error(
+          (s ? "HTTPS" : "HTTP") + " 代理在返回 CONNECT 响应前关闭连接",
+        );
+      }
+      i = new Uint8Array([...i, ...t]), g = i.length;
+      const n = i.findIndex((e, t) =>
+        t < i.length - 3 && 13 === i[t] && 10 === i[t + 1] && 13 === i[t + 2] &&
+        10 === i[t + 3]
+      );
+      -1 !== n && (c = n + 4);
+    }
+    if (-1 === c) throw new Error("代理 CONNECT 响应头过长或无效");
+    const w = f.decode(i.slice(0, c)).split("\r\n")[0].match(
+        /HTTP\/\d\.\d\s+(\d+)/,
+      ),
+      m = w ? parseInt(w[1], 10) : NaN;
+    if (!Number.isFinite(m) || m < 200 || m >= 300) {
+      throw new Error(`Connection failed: HTTP ${m}`);
+    }
+    if (d.releaseLock(), p(n) > 0) {
+      const e = l.writable.getWriter();
+      await e.write(n), e.releaseLock();
+    }
+    if (g > c) {
+      const { readable: e, writable: t } = new TransformStream(),
+        n = t.getWriter();
+      return await n.write(i.subarray(c, g)),
+        n.releaseLock(),
+        l.readable.pipeTo(t).catch(() => {}),
+        {
+          readable: e,
+          writable: l.writable,
+          closed: l.closed,
+          close: () => l.close(),
+        };
+    }
+    return l;
   } catch (e) {
     try {
       u.releaseLock();
@@ -2780,120 +2852,48 @@ async function H(t, n, s) {
     throw e;
   }
 }
-async function _(t, n, s, r = !1) {
-  const { username: a, password: o, hostname: i, port: l } = c,
-    u = r
-      ? e({ hostname: i, port: l }, {
-        secureTransport: "on",
-        allowHalfOpen: !1,
-      })
-      : e({ hostname: i, port: l }),
-    d = u.writable.getWriter(),
-    h = u.readable.getReader(),
-    f = new TextEncoder(),
-    g = new TextDecoder();
-  try {
-    r && await u.opened;
-    const e = `CONNECT ${t}:${n} HTTP/1.1\r\nHost: ${t}:${n}\r\n${
-      a && o ? `Proxy-Authorization: Basic ${btoa(`${a}:${o}`)}\r\n` : ""
-    }User-Agent: Mozilla/5.0\r\nConnection: keep-alive\r\n\r\n`;
-    await d.write(f.encode(e)), d.releaseLock();
-    let i = new Uint8Array(0), c = -1, l = 0;
-    for (; -1 === c && l < 8192;) {
-      const { done: e, value: t } = await h.read();
-      if (e || !t) {
-        throw new Error(
-          (r ? "HTTPS" : "HTTP") + " 代理在返回 CONNECT 响应前关闭连接",
-        );
-      }
-      i = new Uint8Array([...i, ...t]), l = i.length;
-      const n = i.findIndex((e, t) =>
-        t < i.length - 3 && 13 === i[t] && 10 === i[t + 1] && 13 === i[t + 2] &&
-        10 === i[t + 3]
-      );
-      -1 !== n && (c = n + 4);
-    }
-    if (-1 === c) throw new Error("代理 CONNECT 响应头过长或无效");
-    const w = g.decode(i.slice(0, c)).split("\r\n")[0].match(
-        /HTTP\/\d\.\d\s+(\d+)/,
-      ),
-      m = w ? parseInt(w[1], 10) : NaN;
-    if (!Number.isFinite(m) || m < 200 || m >= 300) {
-      throw new Error(`Connection failed: HTTP ${m}`);
-    }
-    if (h.releaseLock(), p(s) > 0) {
-      const e = u.writable.getWriter();
-      await e.write(s), e.releaseLock();
-    }
-    if (l > c) {
-      const { readable: e, writable: t } = new TransformStream(),
-        n = t.getWriter();
-      return await n.write(i.subarray(c, l)),
-        n.releaseLock(),
-        u.readable.pipeTo(t).catch(() => {}),
-        {
-          readable: e,
-          writable: u.writable,
-          closed: u.closed,
-          close: () => u.close(),
-        };
-    }
-    return u;
-  } catch (e) {
-    try {
-      d.releaseLock();
-    } catch (e) {}
-    try {
-      h.releaseLock();
-    } catch (e) {}
-    try {
-      u.close();
-    } catch (e) {}
-    throw e;
-  }
-}
 function M(...e) {
-  d && console.log(...e);
+  u && console.log(...e);
 }
-async function F(e, t, n, s = "Get_SUB", r, a = !0) {
+async function F(env, e, t, n = "Get_SUB", s, r = !0) {
   try {
-    const o = new Date(),
-      i = {
-        TYPE: s,
-        IP: n,
-        ASN: `AS${t.cf.asn || "0"} ${t.cf.asOrganization || "Unknown"}`,
-        CC: `${t.cf.country || "N/A"} ${t.cf.city || "N/A"}`,
-        URL: t.url,
-        UA: t.headers.get("User-Agent") || "Unknown",
-        TIME: o.getTime(),
+    const a = new Date(),
+      o = {
+        TYPE: n,
+        IP: t,
+        ASN: `AS${e.cf.asn || "0"} ${e.cf.asOrganization || "Unknown"}`,
+        CC: `${e.cf.country || "N/A"} ${e.cf.city || "N/A"}`,
+        URL: e.url,
+        UA: e.headers.get("User-Agent") || "Unknown",
+        TIME: a.getTime(),
       };
-    if (r.TG.启用) {
+    if (s.TG.启用) {
       try {
-        const t = await e.KV.get("tg.json"), n = JSON.parse(t);
-        if (n?.BotToken && n?.ChatID) {
-          const e = new Date(i.TIME).toLocaleString("zh-CN", {
+        const e = await env.KV.get("tg.json"), t = JSON.parse(e);
+        if (t?.BotToken && t?.ChatID) {
+          const e = new Date(o.TIME).toLocaleString("zh-CN", {
               timeZone: "Asia/Shanghai",
             }),
-            t = new URL(i.URL),
-            s =
-              `<b>#${r.优选订阅生成.SUBNAME} 日志通知</b>\n\n📌 <b>类型：</b>#${i.TYPE}\n🌐 <b>IP：</b><code>${i.IP}</code>\n📍 <b>位置：</b>${i.CC}\n🏢 <b>ASN：</b>${i.ASN}\n🔗 <b>域名：</b><code>${t.host}</code>\n🔍 <b>路径：</b><code>${
-                t.pathname + t.search
-              }</code>\n🤖 <b>UA：</b><code>${i.UA}</code>\n📅 <b>时间：</b>${e}\n` +
-              (r.CF.Usage.success
-                ? `📊 <b>请求用量：</b>${r.CF.Usage.total}/${r.CF.Usage.max} <b>${
-                  (r.CF.Usage.total / r.CF.Usage.max * 100).toFixed(2)
+            n = new URL(o.URL),
+            r =
+              `<b>#${s.优选订阅生成.SUBNAME} 日志通知</b>\n\n📌 <b>类型：</b>#${o.TYPE}\n🌐 <b>IP：</b><code>${o.IP}</code>\n📍 <b>位置：</b>${o.CC}\n🏢 <b>ASN：</b>${o.ASN}\n🔗 <b>域名：</b><code>${n.host}</code>\n🔍 <b>路径：</b><code>${
+                n.pathname + n.search
+              }</code>\n🤖 <b>UA：</b><code>${o.UA}</code>\n📅 <b>时间：</b>${e}\n` +
+              (s.CF.Usage.success
+                ? `📊 <b>请求用量：</b>${s.CF.Usage.total}/${s.CF.Usage.max} <b>${
+                  (s.CF.Usage.total / s.CF.Usage.max * 100).toFixed(2)
                 }%</b>\n`
                 : "");
           await fetch(
-            `https://api.telegram.org/bot${n.BotToken}/sendMessage?chat_id=${n.ChatID}&parse_mode=HTML&text=${
-              encodeURIComponent(s)
+            `https://api.telegram.org/bot${t.BotToken}/sendMessage?chat_id=${t.ChatID}&parse_mode=HTML&text=${
+              encodeURIComponent(r)
             }`,
             {
               method: "GET",
               headers: {
                 Accept: "text/html,application/xhtml+xml,application/xml;",
                 "Accept-Encoding": "gzip, deflate, br",
-                "User-Agent": i.UA || "Unknown",
+                "User-Agent": o.UA || "Unknown",
               },
             },
           );
@@ -2902,37 +2902,37 @@ async function F(e, t, n, s = "Get_SUB", r, a = !0) {
         console.error(`读取tg.json出错: ${e.message}`);
       }
     }
-    if (!(a = !["1", "true"].includes(e.OFF_LOG) && a)) return;
-    let c = [];
-    const l = await e.KV.get("log.json"), u = 4;
-    if (l) {
+    if (!(r = !["1", "true"].includes(env.OFF_LOG) && r)) return;
+    let i = [];
+    const c = await env.KV.get("log.json"), l = 4;
+    if (c) {
       try {
-        if (c = JSON.parse(l), Array.isArray(c)) {
-          if ("Get_SUB" !== s) {
-            const e = o.getTime() - 18e5;
+        if (i = JSON.parse(c), Array.isArray(i)) {
+          if ("Get_SUB" !== n) {
+            const n = a.getTime() - 18e5;
             if (
-              c.some((s) =>
-                "Get_SUB" !== s.TYPE && s.IP === n && s.URL === t.url &&
-                s.UA === (t.headers.get("User-Agent") || "Unknown") &&
-                s.TIME >= e
+              i.some((s) =>
+                "Get_SUB" !== s.TYPE && s.IP === t && s.URL === e.url &&
+                s.UA === (e.headers.get("User-Agent") || "Unknown") &&
+                s.TIME >= n
               )
             ) return;
             for (
-              c.push(i);
-              JSON.stringify(c, null, 2).length > 1024 * u * 1024 &&
-              c.length > 0;
-            ) c.shift();
+              i.push(o);
+              JSON.stringify(i, null, 2).length > 1024 * l * 1024 &&
+              i.length > 0;
+            ) i.shift();
           } else {for (
-              c.push(i);
-              JSON.stringify(c, null, 2).length > 1024 * u * 1024 &&
-              c.length > 0;
-            ) c.shift();}
-        } else c = [i];
+              i.push(o);
+              JSON.stringify(i, null, 2).length > 1024 * l * 1024 &&
+              i.length > 0;
+            ) i.shift();}
+        } else i = [o];
       } catch (e) {
-        c = [i];
+        i = [o];
       }
-    } else c = [i];
-    await e.KV.put("log.json", JSON.stringify(c, null, 2));
+    } else i = [o];
+    await env.KV.put("log.json", JSON.stringify(i, null, 2));
   } catch (e) {
     console.error(`日志记录失败: ${e.message}`);
   }
@@ -3357,29 +3357,29 @@ async function J(e, t, n = "https://cloudflare-dns.com/dns-query") {
       [];
   }
 }
-async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
-  const l = atob("UFJPWFlJUA=="),
-    u = n,
-    d = "https://dns.alidns.com/dns-query",
-    f = "cloudflare-ech.com",
-    p = "{{IP:PORT}}",
-    g = performance.now(),
-    w = {
+async function G(env, t, n, s = "Mozilla/5.0", i = !1) {
+  const c = atob("UFJPWFlJUA=="),
+    l = t,
+    u = "https://dns.alidns.com/dns-query",
+    h = "cloudflare-ech.com",
+    f = "{{IP:PORT}}",
+    p = performance.now(),
+    g = {
       TIME: (new Date()).toISOString(),
-      HOST: u,
-      HOSTS: [n],
-      UUID: s,
+      HOST: l,
+      HOSTS: [t],
+      UUID: n,
       PATH: "/",
       "协议类型": "vless",
       "传输协议": "ws",
       "gRPC模式": "gun",
-      gRPCUserAgent: r,
+      gRPCUserAgent: s,
       "跳过证书验证": !1,
       "启用0RTT": !1,
       "TLS分片": null,
       "随机路径": !1,
       ECH: !1,
-      ECHConfig: { DNS: d, SNI: f },
+      ECHConfig: { DNS: u, SNI: h },
       SS: { "加密方式": "aes-128-gcm", TLS: !0 },
       Fingerprint: "chrome",
       "优选订阅生成": {
@@ -3388,7 +3388,7 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
         SUB: null,
         SUBNAME: "edgetunnel",
         SUBUpdateTime: 3,
-        TOKEN: await B(n + s),
+        TOKEN: await B(t + n),
       },
       "订阅转换配置": {
         SUBAPI: "https://SUBAPI.cmliussss.net",
@@ -3397,12 +3397,12 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
         SUBEMOJI: !1,
       },
       "反代": {
-        [l]: "auto",
-        SOCKS5: { "启用": a, "全局": o, "账号": i, "白名单": h },
+        [c]: "auto",
+        SOCKS5: { "启用": r, "全局": a, "账号": o, "白名单": d },
         "路径模板": {
-          [l]: "proxyip=" + p,
-          SOCKS5: { "全局": "socks5://" + p, "标准": "socks5=" + p },
-          HTTP: { "全局": "http://" + p, "标准": "http=" + p },
+          [c]: "proxyip=" + f,
+          SOCKS5: { "全局": "socks5://" + f, "标准": "socks5=" + f },
+          HTTP: { "全局": "http://" + f, "标准": "http=" + f },
         },
       },
       TG: { "启用": !1, BotToken: null, ChatID: null },
@@ -3416,142 +3416,142 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
       },
     };
   try {
-    let n = await e.KV.get("config.json");
-    n && 1 != c
-      ? t = JSON.parse(n)
-      : (await e.KV.put("config.json", JSON.stringify(w, null, 2)), t = w);
-  } catch (e) {
-    console.error(`读取config_JSON出错: ${e.message}`), t = w;
+    let t = await env.KV.get("config.json");
+    t && 1 != i
+      ? e = JSON.parse(t)
+      : (await env.KV.put("config.json", JSON.stringify(g, null, 2)), e = g);
+  } catch (t) {
+    console.error(`读取config_JSON出错: ${t.message}`), e = g;
   }
-  t.gRPCUserAgent || (t.gRPCUserAgent = r),
-    t.HOST = u,
-    t.HOSTS || (t.HOSTS = [n]),
-    e.HOST &&
-    (t.HOSTS = (await V(e.HOST)).map((e) =>
+  e.gRPCUserAgent || (e.gRPCUserAgent = s),
+    e.HOST = l,
+    e.HOSTS || (e.HOSTS = [t]),
+    env.HOST &&
+    (e.HOSTS = (await V(env.HOST)).map((e) =>
       e.toLowerCase().replace(/^https?:\/\//, "").split("/")[0].split(":")[0]
     )),
-    t.UUID = s,
-    t.随机路径 || (t.随机路径 = !1),
-    t.启用0RTT || (t.启用0RTT = !1),
-    e.PATH
-      ? t.PATH = e.PATH.startsWith("/") ? e.PATH : "/" + e.PATH
-      : t.PATH || (t.PATH = "/"),
-    t.gRPC模式 || (t.gRPC模式 = "gun"),
-    t.SS || (t.SS = { "加密方式": "aes-128-gcm", TLS: !1 }),
-    t.反代.路径模板?.[l] ||
-    (t.反代.路径模板 = {
-      [l]: "proxyip=" + p,
-      SOCKS5: { "全局": "socks5://" + p, "标准": "socks5=" + p },
-      HTTP: { "全局": "http://" + p, "标准": "http=" + p },
+    e.UUID = n,
+    e.随机路径 || (e.随机路径 = !1),
+    e.启用0RTT || (e.启用0RTT = !1),
+    env.PATH
+      ? e.PATH = env.PATH.startsWith("/") ? env.PATH : "/" + env.PATH
+      : e.PATH || (e.PATH = "/"),
+    e.gRPC模式 || (e.gRPC模式 = "gun"),
+    e.SS || (e.SS = { "加密方式": "aes-128-gcm", TLS: !1 }),
+    e.反代.路径模板?.[c] ||
+    (e.反代.路径模板 = {
+      [c]: "proxyip=" + f,
+      SOCKS5: { "全局": "socks5://" + f, "标准": "socks5=" + f },
+      HTTP: { "全局": "http://" + f, "标准": "http=" + f },
     });
-  const m = t.反代.路径模板[t.反代.SOCKS5.启用?.toUpperCase()];
+  const w = e.反代.路径模板[e.反代.SOCKS5.启用?.toUpperCase()];
+  let m = "";
+  w && e.反代.SOCKS5.账号
+    ? m = (e.反代.SOCKS5.全局 ? w.全局 : w.标准).replace(f, e.反代.SOCKS5.账号)
+    : "auto" !== e.反代[c] && (m = e.反代.路径模板[c].replace(f, e.反代[c]));
   let y = "";
-  m && t.反代.SOCKS5.账号
-    ? y = (t.反代.SOCKS5.全局 ? m.全局 : m.标准).replace(p, t.反代.SOCKS5.账号)
-    : "auto" !== t.反代[l] && (y = t.反代.路径模板[l].replace(p, t.反代[l]));
-  let b = "";
-  if (y.includes("?")) {
-    const [e, t] = y.split("?");
-    y = e, b = t;
+  if (m.includes("?")) {
+    const [e, t] = m.split("?");
+    m = e, y = t;
   }
-  t.PATH = t.PATH.replace(y, "").replace("//", "/");
-  const S = "/" === t.PATH
+  e.PATH = e.PATH.replace(m, "").replace("//", "/");
+  const b = "/" === e.PATH
       ? ""
-      : t.PATH.replace(/\/+(?=\?|$)/, "").replace(/\/+$/, ""),
-    [$, ...C] = S.split("?"),
-    A = C.length ? "?" + C.join("?") : "",
-    U = b ? A ? A + "&" + b : "?" + b : A;
-  t.完整节点路径 = ($ || "/") + ($ && y ? "/" : "") + y + U +
-    (t.启用0RTT ? (U ? "&" : "?") + "ed=2560" : ""),
-    t.TLS分片 || null === t.TLS分片 || (t.TLS分片 = null);
-  const T = "Shadowrocket" == t.TLS分片
+      : e.PATH.replace(/\/+(?=\?|$)/, "").replace(/\/+$/, ""),
+    [S, ...$] = b.split("?"),
+    C = $.length ? "?" + $.join("?") : "",
+    A = y ? C ? C + "&" + y : "?" + y : C;
+  e.完整节点路径 = (S || "/") + (S && m ? "/" : "") + m + A +
+    (e.启用0RTT ? (A ? "&" : "?") + "ed=2560" : ""),
+    e.TLS分片 || null === e.TLS分片 || (e.TLS分片 = null);
+  const U = "Shadowrocket" == e.TLS分片
     ? `&fragment=${encodeURIComponent("1,40-60,30-50,tlshello")}`
-    : "Happ" == t.TLS分片
+    : "Happ" == e.TLS分片
     ? `&fragment=${encodeURIComponent("3,1,tlshello")}`
     : "";
-  t.Fingerprint || (t.Fingerprint = "chrome"),
-    t.ECH || (t.ECH = !1),
-    t.ECHConfig || (t.ECHConfig = { DNS: d, SNI: f });
-  const k = t.ECH
+  e.Fingerprint || (e.Fingerprint = "chrome"),
+    e.ECH || (e.ECH = !1),
+    e.ECHConfig || (e.ECHConfig = { DNS: u, SNI: h });
+  const T = e.ECH
       ? `&ech=${
         encodeURIComponent(
-          (t.ECHConfig.SNI ? t.ECHConfig.SNI + "+" : "") + t.ECHConfig.DNS,
+          (e.ECHConfig.SNI ? e.ECHConfig.SNI + "+" : "") + e.ECHConfig.DNS,
         )
       }`
       : "",
-    x = "xhttp" === t.传输协议
+    k = "xhttp" === e.传输协议
       ? "xhttp&mode=stream-one"
-      : "grpc" === t.传输协议
-      ? "multi" === t.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
+      : "grpc" === e.传输协议
+      ? "multi" === e.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
       : "ws";
-  t.LINK = "ss" === t.协议类型
-    ? `${t.协议类型}://${btoa(t.SS.加密方式 + ":" + s)}@${u}:${
-      t.SS.TLS ? "443" : "80"
+  e.LINK = "ss" === e.协议类型
+    ? `${e.协议类型}://${btoa(e.SS.加密方式 + ":" + n)}@${l}:${
+      e.SS.TLS ? "443" : "80"
     }?plugin=v2${
       encodeURIComponent(
-        `ray-plugin;mode=websocket;host=${u};path=${
-          (t.完整节点路径.includes("?")
-            ? t.完整节点路径.replace("?", "?enc=" + t.SS.加密方式 + "&")
-            : t.完整节点路径 + "?enc=" + t.SS.加密方式) +
-          (t.SS.TLS ? ";tls" : "")
+        `ray-plugin;mode=websocket;host=${l};path=${
+          (e.完整节点路径.includes("?")
+            ? e.完整节点路径.replace("?", "?enc=" + e.SS.加密方式 + "&")
+            : e.完整节点路径 + "?enc=" + e.SS.加密方式) +
+          (e.SS.TLS ? ";tls" : "")
         };mux=0`,
-      ) + k
-    }#${encodeURIComponent(t.优选订阅生成.SUBNAME)}`
-    : `${t.协议类型}://${s}@${u}:443?security=tls&type=${
-      x + k
-    }&host=${u}&fp=${t.Fingerprint}&sni=${u}&path=${
-      encodeURIComponent(t.随机路径 ? K(t.完整节点路径) : t.完整节点路径) + T
-    }&encryption=none${t.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""}#${
-      encodeURIComponent(t.优选订阅生成.SUBNAME)
-    }`, t.优选订阅生成.TOKEN = await B(n + s);
-  const P = { BotToken: null, ChatID: null };
-  t.TG = { "启用": !!t.TG.启用 && t.TG.启用, ...P };
+      ) + T
+    }#${encodeURIComponent(e.优选订阅生成.SUBNAME)}`
+    : `${e.协议类型}://${n}@${l}:443?security=tls&type=${
+      k + T
+    }&host=${l}&fp=${e.Fingerprint}&sni=${l}&path=${
+      encodeURIComponent(e.随机路径 ? K(e.完整节点路径) : e.完整节点路径) + U
+    }&encryption=none${e.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""}#${
+      encodeURIComponent(e.优选订阅生成.SUBNAME)
+    }`, e.优选订阅生成.TOKEN = await B(t + n);
+  const x = { BotToken: null, ChatID: null };
+  e.TG = { "启用": !!e.TG.启用 && e.TG.启用, ...x };
   try {
-    const n = await e.KV.get("tg.json");
-    if (n) {
-      const e = JSON.parse(n);
-      t.TG.ChatID = e.ChatID ? e.ChatID : null,
-        t.TG.BotToken = e.BotToken ? W(e.BotToken) : null;
-    } else await e.KV.put("tg.json", JSON.stringify(P, null, 2));
+    const t = await env.KV.get("tg.json");
+    if (t) {
+      const n = JSON.parse(t);
+      e.TG.ChatID = n.ChatID ? n.ChatID : null,
+        e.TG.BotToken = n.BotToken ? W(n.BotToken) : null;
+    } else await env.KV.put("tg.json", JSON.stringify(x, null, 2));
   } catch (e) {
     console.error(`读取tg.json出错: ${e.message}`);
   }
-  const I = {
+  const P = {
     Email: null,
     GlobalAPIKey: null,
     AccountID: null,
     APIToken: null,
     UsageAPI: null,
   };
-  t.CF = {
-    ...I,
+  e.CF = {
+    ...P,
     Usage: { success: !1, pages: 0, workers: 0, total: 0, max: 1e5 },
   };
   try {
-    const n = await e.KV.get("cf.json");
-    if (n) {
-      const e = JSON.parse(n);
-      if (e.UsageAPI) {
+    const t = await env.KV.get("cf.json");
+    if (t) {
+      const n = JSON.parse(t);
+      if (n.UsageAPI) {
         try {
-          const n = await fetch(e.UsageAPI), s = await n.json();
-          t.CF.Usage = s;
+          const t = await fetch(n.UsageAPI), s = await t.json();
+          e.CF.Usage = s;
         } catch (e) {
           console.error(`请求 CF_JSON.UsageAPI 失败: ${e.message}`);
         }
       } else {
-        t.CF.Email = e.Email ? e.Email : null,
-          t.CF.GlobalAPIKey = e.GlobalAPIKey ? W(e.GlobalAPIKey) : null,
-          t.CF.AccountID = e.AccountID ? W(e.AccountID) : null,
-          t.CF.APIToken = e.APIToken ? W(e.APIToken) : null,
-          t.CF.UsageAPI = null;
-        const n = await te(e.Email, e.GlobalAPIKey, e.AccountID, e.APIToken);
-        t.CF.Usage = n;
+        e.CF.Email = n.Email ? n.Email : null,
+          e.CF.GlobalAPIKey = n.GlobalAPIKey ? W(n.GlobalAPIKey) : null,
+          e.CF.AccountID = n.AccountID ? W(n.AccountID) : null,
+          e.CF.APIToken = n.APIToken ? W(n.APIToken) : null,
+          e.CF.UsageAPI = null;
+        const t = await te(n.Email, n.GlobalAPIKey, n.AccountID, n.APIToken);
+        e.CF.Usage = t;
       }
-    } else await e.KV.put("cf.json", JSON.stringify(I, null, 2));
+    } else await env.KV.put("cf.json", JSON.stringify(P, null, 2));
   } catch (e) {
     console.error(`读取cf.json出错: ${e.message}`);
   }
-  return t.加载时间 = (performance.now() - g).toFixed(2) + "ms", t;
+  return e.加载时间 = (performance.now() - p).toFixed(2) + "ms", e;
 }
 async function q(e, t = 16, n = -1, s = !0) {
   const r = {
@@ -3812,41 +3812,41 @@ async function X(e, t = "443", n = 3e3) {
 async function Y(e) {
   const { searchParams: t } = e,
     n = decodeURIComponent(e.pathname),
-    s = n.toLowerCase();
-  i = t.get("socks5") || t.get("http") || t.get("https") || null,
-    o = t.has("globalproxy"),
+    c = n.toLowerCase();
+  o = t.get("socks5") || t.get("http") || t.get("https") || null,
+    a = t.has("globalproxy"),
     t.get("socks5")
-      ? a = "socks5"
+      ? r = "socks5"
       : t.get("http")
-      ? a = "http"
-      : t.get("https") && (a = "https");
-  const l = (e, t = !0) => {
+      ? r = "http"
+      : t.get("https") && (r = "https");
+  const u = (e, t = !0) => {
       const n = /^(socks5|http|https):\/\/(.+)$/i.exec(e || "");
       return !!n &&
-        (a = n[1].toLowerCase(), i = n[2].split("/")[0], t && (o = !0), !0);
+        (r = n[1].toLowerCase(), o = n[2].split("/")[0], t && (a = !0), !0);
     },
     d = (e) => {
-      r = e, u = !1;
+      s = e, l = !1;
     },
     h = t.get("proxyip");
-  if (null !== h) { if (!l(h)) return d(h); }
+  if (null !== h) { if (!u(h)) return d(h); }
   else {
     let e = /\/(socks5?|http|https):\/?\/?([^/?#\s]+)/i.exec(n);
     if (e) {
       const t = e[1].toLowerCase();
-      a = "http" === t ? "http" : "https" === t ? "https" : "socks5",
-        i = e[2].split("/")[0],
-        o = !0;
+      r = "http" === t ? "http" : "https" === t ? "https" : "socks5",
+        o = e[2].split("/")[0],
+        a = !0;
     } else if (e = /\/(g?s5|socks5|g?http|g?https)=([^/?#\s]+)/i.exec(n)) {
       const t = e[1].toLowerCase();
-      i = e[2].split("/")[0],
-        a = t.includes("https")
+      o = e[2].split("/")[0],
+        r = t.includes("https")
           ? "https"
           : t.includes("http")
           ? "http"
           : "socks5",
-        t.startsWith("g") && (o = !0);
-    } else if (e = /\/(proxyip[.=]|pyip=|ip=)([^?#\s]+)/.exec(s)) {
+        t.startsWith("g") && (a = !0);
+    } else if (e = /\/(proxyip[.=]|pyip=|ip=)([^?#\s]+)/.exec(c)) {
       const t = ((e) => {
         if (!e.includes("://")) {
           const t = e.indexOf("/");
@@ -3857,23 +3857,23 @@ async function Y(e) {
         const n = t[1].indexOf("/");
         return n > 0 ? `${t[0]}://${t[1].slice(0, n)}` : e;
       })(e[2]);
-      if (!l(t)) return d(t);
+      if (!u(t)) return d(t);
     }
   }
-  if (i) {
+  if (o) {
     try {
-      c = await ee(i, "https" === a ? 443 : 80),
-        a = t.get("socks5")
+      i = await ee(o, "https" === r ? 443 : 80),
+        r = t.get("socks5")
           ? "socks5"
           : t.get("http")
           ? "http"
           : t.get("https")
           ? "https"
-          : a || "socks5";
+          : r || "socks5";
     } catch (e) {
-      console.error("解析SOCKS5地址失败:", e.message), a = null;
+      console.error("解析SOCKS5地址失败:", e.message), r = null;
     }
-  } else a = null;
+  } else r = null;
 }
 const Z = /^(?:[A-Z0-9+/]{4})*(?:[A-Z0-9+/]{2}==|[A-Z0-9+/]{3}=)?$/i,
   Q = /^\[.*\]$/;
@@ -4118,7 +4118,7 @@ function ne(e) {
 async function se(e = "socks5", t) {
   const n = Date.now();
   try {
-    c = await ee(t, "https" === e ? 443 : 80);
+    i = await ee(t, "https" === e ? 443 : 80);
   } catch (s) {
     return {
       success: !1,
@@ -4127,8 +4127,8 @@ async function se(e = "socks5", t) {
       responseTime: Date.now() - n,
     };
   }
-  const { username: s, password: r, hostname: a, port: o } = c,
-    i = s && r ? `${s}:${r}@${a}:${o}` : `${a}:${o}`;
+  const { username: s, password: r, hostname: a, port: o } = i,
+    c = s && r ? `${s}:${r}@${a}:${o}` : `${a}:${o}`;
   try {
     const t = new Uint8Array(0),
       s = "socks5" === e
@@ -4140,7 +4140,7 @@ async function se(e = "socks5", t) {
       return {
         success: !1,
         error: "无法连接到代理服务器",
-        proxy: e + "://" + i,
+        proxy: e + "://" + c,
         responseTime: Date.now() - n,
       };
     }
@@ -4152,21 +4152,21 @@ async function se(e = "socks5", t) {
         ),
       ), t.releaseLock();
       const a = s.readable.getReader(), o = new TextDecoder();
-      let c = "";
+      let i = "";
       try {
         for (;;) {
           const { done: e, value: t } = await a.read();
           if (e) break;
-          c += o.decode(t, { stream: !0 });
+          i += o.decode(t, { stream: !0 });
         }
       } finally {
         a.releaseLock();
       }
       return await s.close(), {
         success: !0,
-        proxy: e + "://" + i,
-        ip: c.match(/ip=(.*)/)[1],
-        loc: c.match(/loc=(.*)/)[1],
+        proxy: e + "://" + c,
+        ip: i.match(/ip=(.*)/)[1],
+        loc: i.match(/loc=(.*)/)[1],
         responseTime: Date.now() - n,
       };
     } catch (t) {
@@ -4178,7 +4178,7 @@ async function se(e = "socks5", t) {
       return {
         success: !1,
         error: t.message,
-        proxy: e + "://" + i,
+        proxy: e + "://" + c,
         responseTime: Date.now() - n,
       };
     }
@@ -4186,8 +4186,9 @@ async function se(e = "socks5", t) {
     return {
       success: !1,
       error: t.message,
-      proxy: e + "://" + i,
+      proxy: e + "://" + c,
       responseTime: Date.now() - n,
     };
   }
 }
+export { f as default };

@@ -1,0 +1,27 @@
+{
+  "name": "edgetunnel",
+  "version": "2.1.0",
+  "description": "Cloudflare Workers/Pages application that provides an edge computing tunnel solution",
+  "type": "module",
+  "main": "_worker.js",
+  "scripts": {
+    "format": "deno fmt",
+    "build": "rollup -c",
+    "dev": "rollup -c -w"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "proxy",
+    "vless",
+    "trojan",
+    "shadowsocks"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^1.0.0",
+    "rollup": "^4.9.6"
+  }
+}
