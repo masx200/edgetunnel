@@ -4522,6 +4522,11 @@ async function 读取config_JSON(
       )
     }`
     : "";
+  const 传输协议 = config_JSON.传输协议 === "xhttp"
+    ? "xhttp&mode=stream-one"
+    : (config_JSON.传输协议 === "grpc"
+      ? (config_JSON.gRPC模式 === "multi" ? "grpc&mode=multi" : "grpc&mode=gun")
+      : "ws");
   config_JSON.LINK = config_JSON.协议类型 === "ss"
     ? `${config_JSON.协议类型}://${
       btoa(config_JSON.SS.加密方式 + ":" + userID)
@@ -4538,7 +4543,7 @@ async function 读取config_JSON(
       ) + ECHLINK参数
     }#${encodeURIComponent(config_JSON.优选订阅生成.SUBNAME)}`
     : `${config_JSON.协议类型}://${userID}@${host}:443?security=tls&type=${
-      config_JSON.传输协议 + ECHLINK参数
+      传输协议 + ECHLINK参数
     }&host=${host}&fp=${config_JSON.Fingerprint}&sni=${host}&path=${
       encodeURIComponent(
         config_JSON.随机路径

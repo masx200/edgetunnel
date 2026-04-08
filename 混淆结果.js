@@ -3473,12 +3473,17 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
     t.ECH || (t.ECH = !1),
     t.ECHConfig || (t.ECHConfig = { DNS: d, SNI: f });
   const k = t.ECH
-    ? `&ech=${
-      encodeURIComponent(
-        (t.ECHConfig.SNI ? t.ECHConfig.SNI + "+" : "") + t.ECHConfig.DNS,
-      )
-    }`
-    : "";
+      ? `&ech=${
+        encodeURIComponent(
+          (t.ECHConfig.SNI ? t.ECHConfig.SNI + "+" : "") + t.ECHConfig.DNS,
+        )
+      }`
+      : "",
+    x = "xhttp" === t.传输协议
+      ? "xhttp&mode=stream-one"
+      : "grpc" === t.传输协议
+      ? "multi" === t.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
+      : "ws";
   t.LINK = "ss" === t.协议类型
     ? `${t.协议类型}://${btoa(t.SS.加密方式 + ":" + s)}@${u}:${
       t.SS.TLS ? "443" : "80"
@@ -3493,25 +3498,25 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
       ) + k
     }#${encodeURIComponent(t.优选订阅生成.SUBNAME)}`
     : `${t.协议类型}://${s}@${u}:443?security=tls&type=${
-      t.传输协议 + k
+      x + k
     }&host=${u}&fp=${t.Fingerprint}&sni=${u}&path=${
       encodeURIComponent(t.随机路径 ? K(t.完整节点路径) : t.完整节点路径) + T
     }&encryption=none${t.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""}#${
       encodeURIComponent(t.优选订阅生成.SUBNAME)
     }`, t.优选订阅生成.TOKEN = await B(n + s);
-  const x = { BotToken: null, ChatID: null };
-  t.TG = { "启用": !!t.TG.启用 && t.TG.启用, ...x };
+  const P = { BotToken: null, ChatID: null };
+  t.TG = { "启用": !!t.TG.启用 && t.TG.启用, ...P };
   try {
     const n = await e.KV.get("tg.json");
     if (n) {
       const e = JSON.parse(n);
       t.TG.ChatID = e.ChatID ? e.ChatID : null,
         t.TG.BotToken = e.BotToken ? W(e.BotToken) : null;
-    } else await e.KV.put("tg.json", JSON.stringify(x, null, 2));
+    } else await e.KV.put("tg.json", JSON.stringify(P, null, 2));
   } catch (e) {
     console.error(`读取tg.json出错: ${e.message}`);
   }
-  const P = {
+  const I = {
     Email: null,
     GlobalAPIKey: null,
     AccountID: null,
@@ -3519,7 +3524,7 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
     UsageAPI: null,
   };
   t.CF = {
-    ...P,
+    ...I,
     Usage: { success: !1, pages: 0, workers: 0, total: 0, max: 1e5 },
   };
   try {
@@ -3542,7 +3547,7 @@ async function G(e, n, s, r = "Mozilla/5.0", c = !1) {
         const n = await te(e.Email, e.GlobalAPIKey, e.AccountID, e.APIToken);
         t.CF.Usage = n;
       }
-    } else await e.KV.put("cf.json", JSON.stringify(P, null, 2));
+    } else await e.KV.put("cf.json", JSON.stringify(I, null, 2));
   } catch (e) {
     console.error(`读取cf.json出错: ${e.message}`);
   }
