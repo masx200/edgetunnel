@@ -18,7 +18,7 @@ let e,
     "scholar.google.com",
   ];
 const h = "https://edt-pages.github.io";
-var f = {
+var p = {
   async fetch(t, env, ctx) {
     const n = new URL(function (e) {
         const t = (e = e.replace(/%5[Cc]/g, "").replace(/\\/g, "")).indexOf(
@@ -35,16 +35,16 @@ var f = {
       i = env.ADMIN || env.admin || env.PASSWORD || env.password || env.pswd ||
         env.TOKEN || env.KEY || env.UUID || env.uuid,
       c = env.KEY || "勿动此默认密钥，有需求请自行通过添加变量KEY进行修改",
-      f = await B(i + c),
-      p =
+      p = await B(i + c),
+      f =
         /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
       S = env.UUID || env.uuid,
-      $ = S && p.test(S) ? S.toLowerCase() : [
-        f.slice(0, 8),
-        f.slice(8, 12),
-        "4" + f.slice(13, 16),
-        "8" + f.slice(17, 20),
-        f.slice(20),
+      $ = S && f.test(S) ? S.toLowerCase() : [
+        p.slice(0, 8),
+        p.slice(8, 12),
+        "4" + p.slice(13, 16),
+        "8" + p.slice(17, 20),
+        p.slice(20),
       ].join("-"),
       A =
         (env.HOST
@@ -159,7 +159,7 @@ var f = {
               u = !0, d = !0, O(a);
             },
           });
-          let f = null, p = null, S = null, $ = null, A = null;
+          let p = null, f = null, S = null, $ = null, A = null;
           const k = () => {
               if (S) {
                 try {
@@ -167,18 +167,18 @@ var f = {
                 } catch (e) {}
                 S = null;
               }
-              p = null;
+              f = null;
             },
-            D = async (e, t = !0) => {
+            R = async (e, t = !0) => {
               const n = o.socket;
               if (!n) return !1;
-              n !== p && (k(), p = n, S = n.writable.getWriter());
+              n !== f && (k(), f = n, S = n.writable.getWriter());
               try {
                 return await S.write(e), !0;
               } catch (n) {
                 if (
                   k(), t && "function" == typeof o.retryConnect
-                ) return await o.retryConnect(), await D(e, !1);
+                ) return await o.retryConnect(), await R(e, !1);
                 throw n;
               }
             },
@@ -225,7 +225,7 @@ var f = {
                           d = await P(a, u, o, ["decrypt"]),
                           h = new Uint8Array(b);
                         try {
-                          const t = await L(d, h, l);
+                          const t = await I(d, h, l);
                           if (2 !== t.byteLength) continue;
                           const o = t[0] << 8 | t[1];
                           if (o < 0 || o > a.maxChunk) continue;
@@ -269,7 +269,7 @@ var f = {
                           if (c.buffer.byteLength < e) break;
                           const t = c.buffer.subarray(0, e);
                           c.buffer = c.buffer.subarray(e);
-                          const n = await L(c.decryptKey, c.nonceCounter, t);
+                          const n = await I(c.decryptKey, c.nonceCounter, t);
                           if (2 !== n.byteLength) {
                             throw new Error("SS length decrypt failed");
                           }
@@ -285,7 +285,7 @@ var f = {
                         if (c.buffer.byteLength < e) break;
                         const t = c.buffer.subarray(0, e);
                         c.buffer = c.buffer.subarray(e);
-                        const s = await L(c.decryptKey, c.nonceCounter, t);
+                        const s = await I(c.decryptKey, c.nonceCounter, t);
                         n.push(s), c.waitPayloadLength = null;
                       }
                       return n;
@@ -293,7 +293,7 @@ var f = {
                   };
                 let d = null;
                 const h = 32768,
-                  f = async () => {
+                  p = async () => {
                     if (d) return d;
                     if (!c.加密配置) {
                       throw new Error("SS cipher is not negotiated");
@@ -317,8 +317,8 @@ var f = {
                             o = new Uint8Array(2);
                           o[0] = s.byteLength >>> 8 & 255,
                             o[1] = 255 & s.byteLength;
-                          const l = await I(r, a, o),
-                            u = await I(r, a, s),
+                          const l = await L(r, a, o),
+                            u = await L(r, a, s),
                             d = new Uint8Array(l.byteLength + u.byteLength);
                           d.set(l, 0),
                             d.set(u, l.byteLength),
@@ -329,18 +329,18 @@ var f = {
                     },
                       d;
                   };
-                let p = Promise.resolve();
-                const g = (e) => (p = p.then(async () => {
+                let f = Promise.resolve();
+                const g = (e) => (f = f.then(async () => {
                   if (a.readyState !== WebSocket.OPEN) return;
-                  const t = await f();
+                  const t = await p();
                   await t.加密并发送(e, async (e) => {
                     e.byteLength > 0 && a.readyState === WebSocket.OPEN &&
-                      await R(a, e.buffer);
+                      await D(a, e.buffer);
                   });
                 }).catch((e) => {
                   M(`[SS发送] 加密失败: ${e?.message || e}`), O(a);
                 }),
-                  p);
+                  f);
                 return $ = {
                   "入站解密器": u,
                   "回包Socket": {
@@ -353,7 +353,7 @@ var f = {
                       for (let e = 0; e < t.byteLength; e += h) {
                         g(t.subarray(e, Math.min(e + h, t.byteLength)));
                       }
-                      return p;
+                      return f;
                     },
                     close() {
                       O(a);
@@ -385,7 +385,7 @@ var f = {
               for (const e of s) {
                 let s = !1;
                 try {
-                  s = await D(e, !1);
+                  s = await R(e, !1);
                 } catch (e) {
                   s = !1;
                 }
@@ -441,23 +441,23 @@ var f = {
             new WritableStream({
               async write(s) {
                 if (i) return await v(s, a, null);
-                if ("ss" !== f) {
-                  if (!await D(s)) {
-                    if (null === f) {
-                      if (n.searchParams.get("enc")) f = "ss";
+                if ("ss" !== p) {
+                  if (!await R(s)) {
+                    if (null === p) {
+                      if (n.searchParams.get("enc")) p = "ss";
                       else {
                         const e = new Uint8Array(s);
-                        f = e.byteLength >= 58 && 13 === e[56] && 10 === e[57]
+                        p = e.byteLength >= 58 && 13 === e[56] && 10 === e[57]
                           ? "木马"
                           : "魏烈思";
                       }
-                      M(`[WS转发] 协议类型: ${f} | 来自: ${n.host} | UA: ${
+                      M(`[WS转发] 协议类型: ${p} | 来自: ${n.host} | UA: ${
                         e.headers.get("user-agent") || "未知"
                       }`);
                     }
-                    if ("ss" !== f) {
-                      if (!await D(s)) {
-                        if ("木马" === f) {
+                    if ("ss" !== p) {
+                      if (!await R(s)) {
+                        if ("木马" === p) {
                           const e = g(s, t);
                           if (e?.hasError) {
                             throw new Error(
@@ -536,7 +536,7 @@ var f = {
                   a = (e) => {
                     const s = e.byteLength;
                     if (s < 18) return { "状态": "need_more" };
-                    if (D(e.subarray(1, 17)) !== t) {
+                    if (R(e.subarray(1, 17)) !== t) {
                       return { "状态": "invalid" };
                     }
                     const r = 18 + e[17];
@@ -811,23 +811,23 @@ var f = {
             if (!e.body) return new Response("Bad Request", { status: 400 });
             const n = e.body.getReader(),
               s = { socket: null, connectingPromise: null, retryConnect: null };
-            let r = !1, a = null, o = null, i = null;
-            const c = new Headers({
+            let r = !1, a = null, o = null, i = null, c = 0, l = "";
+            const u = new Headers({
                 "Content-Type": "application/grpc",
-                "grpc-status": "0",
                 "X-Accel-Buffering": "no",
                 "Cache-Control": "no-store",
+                TE: "trailers",
               }),
-              l = 65536,
-              u = 20;
+              d = 65536,
+              h = 20;
             return new Response(
               new ReadableStream({
                 async start(e) {
-                  let c = !1, d = [], h = 0, f = null;
-                  const p = {
+                  let u = !1, p = [], f = 0, m = null;
+                  const y = {
                       readyState: WebSocket.OPEN,
                       send(e) {
-                        if (c) return;
+                        if (u) return;
                         const t = e instanceof Uint8Array
                             ? e
                             : new Uint8Array(e),
@@ -846,40 +846,73 @@ var f = {
                           o[5] = 10,
                           o.set(r, 6),
                           o.set(t, 6 + r.length),
-                          d.push(o),
-                          h += o.byteLength,
-                          h >= l ? m() : f || (f = setTimeout(m, u));
+                          p.push(o),
+                          f += o.byteLength,
+                          f >= d ? b() : m || (m = setTimeout(b, h));
                       },
                       close() {
                         if (this.readyState !== WebSocket.CLOSED) {
-                          m(!0), c = !0, this.readyState = WebSocket.CLOSED;
+                          b(!0), u = !0, this.readyState = WebSocket.CLOSED;
                           try {
                             e.close();
                           } catch (e) {}
                         }
                       },
                     },
-                    m = (t = !1) => {
+                    b = (t = !1) => {
                       if (
-                        f && (clearTimeout(f), f = null), !t && c || 0 === h
+                        m && (clearTimeout(m), m = null), !t && u || 0 === f
                       ) return;
-                      const n = new Uint8Array(h);
+                      const n = new Uint8Array(f);
                       let s = 0;
-                      for (const e of d) n.set(e, s), s += e.byteLength;
-                      d = [], h = 0;
+                      for (const e of p) n.set(e, s), s += e.byteLength;
+                      p = [], f = 0;
                       try {
                         e.enqueue(n);
                       } catch (e) {
-                        c = !0, p.readyState = WebSocket.CLOSED;
+                        u = !0, y.readyState = WebSocket.CLOSED;
                       }
                     },
-                    y = () => {
-                      if (!c) {
+                    S = async () => {
+                      try {
+                        const e = String(c), t = l, n = [];
+                        n.push(`grpc-status: ${e}`),
+                          t && n.push(`grpc-message: ${encodeURIComponent(t)}`);
+                        const s = n.join("\r\n") + "\r\n",
+                          r = (new TextEncoder()).encode(s),
+                          a = [];
+                        let o = r.byteLength >>> 0;
+                        for (; o > 127;) a.push(127 & o | 128), o >>>= 7;
+                        a.push(o);
+                        const i = new Uint8Array(a),
+                          u = 1 + i.length + r.byteLength,
+                          d = new Uint8Array(5 + u);
+                        d[0] = 128,
+                          d[1] = u >>> 24 & 255,
+                          d[2] = u >>> 16 & 255,
+                          d[3] = u >>> 8 & 255,
+                          d[4] = 255 & u,
+                          d[5] = 10,
+                          d.set(i, 6),
+                          d.set(r, 6 + i.length),
+                          p.push(d),
+                          f += d.byteLength,
+                          b(!0),
+                          M(`[gRPC Trailers] 发送状态码=${c}, 消息=${
+                            l || "无"
+                          }`);
+                      } catch (e) {
+                        M(`[gRPC Trailers] 发送失败: ${e?.message || e}`);
+                      }
+                    },
+                    $ = async () => {
+                      if (!u) {
                         if (
-                          m(!0),
-                            c = !0,
-                            p.readyState = WebSocket.CLOSED,
-                            f && clearTimeout(f),
+                          b(!0),
+                            await S(),
+                            u = !0,
+                            y.readyState = WebSocket.CLOSED,
+                            m && clearTimeout(m),
                             i
                         ) {
                           try {
@@ -899,7 +932,7 @@ var f = {
                         } catch (e) {}
                       }
                     },
-                    b = () => {
+                    C = () => {
                       if (i) {
                         try {
                           i.releaseLock();
@@ -908,16 +941,16 @@ var f = {
                       }
                       o = null;
                     },
-                    S = async (e, t = !0) => {
+                    A = async (e, t = !0) => {
                       const n = s.socket;
                       if (!n) return !1;
-                      n !== o && (b(), o = n, i = n.writable.getWriter());
+                      n !== o && (C(), o = n, i = n.writable.getWriter());
                       try {
                         return await i.write(e), !0;
                       } catch (n) {
                         if (
-                          b(), t && "function" == typeof s.retryConnect
-                        ) return await s.retryConnect(), await S(e, !1);
+                          C(), t && "function" == typeof s.retryConnect
+                        ) return await s.retryConnect(), await A(e, !1);
                         throw n;
                       }
                     };
@@ -951,9 +984,9 @@ var f = {
                           n && (i = i.slice(t));
                         }
                         if (i.byteLength) {
-                          if (r) await v(i, p, null);
+                          if (r) await v(i, y, null);
                           else if (s.socket) {
-                            if (!await S(i)) {
+                            if (!await A(i)) {
                               throw new Error("Remote socket is not ready");
                             }
                           } else {
@@ -983,7 +1016,7 @@ var f = {
                               if (N(a)) {
                                 throw new Error("Speedtest site is blocked");
                               }
-                              await E(a, r, o, p, null, s, t);
+                              await E(a, r, o, y, null, s, t);
                             } else {
                               const n = w(e, t);
                               if (n?.hasError) {
@@ -1008,24 +1041,27 @@ var f = {
                                 r = !0;
                               }
                               const u = new Uint8Array([c[0], 0]);
-                              p.send(u);
+                              y.send(u);
                               const d = e.slice(i);
                               r
-                                ? await v(d, p, null)
-                                : await E(o, a, d, p, null, s, t);
+                                ? await v(d, y, null)
+                                : await E(o, a, d, y, null, s, t);
                             }
                           }
                         }
                       }
-                      m();
+                      b();
                     }
                   } catch (e) {
-                    M(`[gRPC转发] 处理失败: ${e?.message || e}`);
+                    c = 13,
+                      l = e?.message || String(e),
+                      M(`[gRPC转发] 处理失败: ${l}`);
                   } finally {
-                    b(), y();
+                    C(), await $();
                   }
                 },
                 cancel() {
+                  c = 1, l = "Client cancelled the stream";
                   try {
                     s.socket?.close();
                   } catch (e) {}
@@ -1034,7 +1070,7 @@ var f = {
                   } catch (e) {}
                 },
               }),
-              { status: 200, headers: c },
+              { status: 200, headers: u },
             );
           }(t, $));
     }
@@ -1412,7 +1448,7 @@ var f = {
         return ctx.waitUntil(F(env, t, j, "Admin_Login", e)),
           fetch(h + "/admin" + n.search);
       }
-      if ("logout" === k || p.test(k)) {
+      if ("logout" === k || f.test(k)) {
         const e = new Response("重定向中...", {
           status: 302,
           headers: { Location: "/login" },
@@ -1443,19 +1479,19 @@ var f = {
           const u = Math.floor(
             (c - l.getTime()) / 864e5 * 24 * 1099511627776 / 2,
           );
-          let d = u, h = u, f = 26388279066624;
+          let d = u, h = u, p = 26388279066624;
           e.CF.Usage.success &&
             (d = e.CF.Usage.pages,
               h = e.CF.Usage.workers,
-              f = Number.isFinite(e.CF.Usage.max)
+              p = Number.isFinite(e.CF.Usage.max)
                 ? e.CF.Usage.max / 1e3 * 1024
                 : 102400);
-          const p = {
+          const f = {
               "content-type": "text/plain; charset=utf-8",
               "Profile-Update-Interval": e.优选订阅生成.SUBUpdateTime,
               "Profile-web-page-url": n.protocol + "//" + n.host + "/admin",
               "Subscription-Userinfo":
-                `upload=${d}; download=${h}; total=${f}; expire=${i}`,
+                `upload=${d}; download=${h}; total=${p}; expire=${i}`,
               "Cache-Control": "no-store",
             },
             g = n.searchParams.has("b64") || n.searchParams.has("base64") ||
@@ -1481,7 +1517,7 @@ var f = {
               ? "loon"
               : "mixed";
           o.includes("mozilla") ||
-            (p["Content-Disposition"] = `attachment; filename*=utf-8''${
+            (f["Content-Disposition"] = `attachment; filename*=utf-8''${
               encodeURIComponent(e.优选订阅生成.SUBNAME)
             }`);
           const m = (n.searchParams.has("surge") || o.includes("surge")) &&
@@ -1565,8 +1601,8 @@ var f = {
                 : "grpc" === e.传输协议
                 ? "multi" === e.gRPC模式 ? "grpc&mode=multi" : "grpc&mode=gun"
                 : "ws";
-            let h = "path", f = "host";
-            "grpc" === e.传输协议 && (h = "serviceName", f = "authority"),
+            let h = "path", p = "host";
+            "grpc" === e.传输协议 && (h = "serviceName", p = "authority"),
               y = i + r.map((t) => {
                 const n = t.match(
                   /^(\[[\da-fA-F:]+\]|[\d.]+|[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?)*)(?::(\d+))?(?:#(.+))?$/,
@@ -1579,26 +1615,26 @@ var f = {
                 r = n[1],
                   i = n[2] ? n[2] : "ss" !== m || e.SS.TLS ? "443" : "80",
                   o = n[3] || r;
-                let p = e.完整节点路径;
+                let f = e.完整节点路径;
                 if (c.length > 0) {
                   const t = c.find((e) => e.includes(r));
                   t &&
-                    (p = `${e.PATH}/proxyip=${t}`.replace(/\/\//g, "/") +
+                    (f = `${e.PATH}/proxyip=${t}`.replace(/\/\//g, "/") +
                       (e.启用0RTT ? "?ed=2560" : ""));
                 }
-                return u && (p = p.replace(/,/g, "%2C")),
+                return u && (f = f.replace(/,/g, "%2C")),
                   "ss" !== m || a
                     ? `${m}://00000000-0000-4000-8000-000000000000@${r}:${i}?security=tls&type=${
                       d + l
-                    }&${f}=example.com&fp=${e.Fingerprint}&sni=example.com&${h}=${
-                      encodeURIComponent(a ? "/" : e.随机路径 ? K(p) : p) + s
+                    }&${p}=example.com&fp=${e.Fingerprint}&sni=example.com&${h}=${
+                      encodeURIComponent(a ? "/" : e.随机路径 ? K(f) : f) + s
                     }&encryption=none${
                       e.跳过证书验证 ? "&insecure=1&allowInsecure=1" : ""
                     }#${encodeURIComponent(o)}`
-                    : (p = (p.includes("?")
-                      ? p.replace("?", "?enc=" + e.SS.加密方式 + "&")
-                      : p + "?enc=" + e.SS.加密方式).replace(/([=,])/g, "\\$1"),
-                      g || (p += ";mux=0"),
+                    : (f = (f.includes("?")
+                      ? f.replace("?", "?enc=" + e.SS.加密方式 + "&")
+                      : f + "?enc=" + e.SS.加密方式).replace(/([=,])/g, "\\$1"),
+                      g || (f += ";mux=0"),
                       `${m}://${
                         btoa(
                           e.SS.加密方式 +
@@ -1607,7 +1643,7 @@ var f = {
                       }@${r}:${i}?plugin=v2${
                         encodeURIComponent(
                           "ray-plugin;mode=websocket;host=example.com;path=" +
-                            (e.随机路径 ? K(p) : p) + (e.SS.TLS ? ";tls" : ""),
+                            (e.随机路径 ? K(f) : f) + (e.SS.TLS ? ";tls" : ""),
                         ) + l + s
                       }#${encodeURIComponent(o)}`);
               }).filter((e) => null !== e).join("\n");
@@ -1883,7 +1919,7 @@ var f = {
                     JSON.stringify(JSON.parse(o), null, 2);
                 }
               }(y, e),
-                p["content-type"] = "application/json; charset=utf-8")
+                f["content-type"] = "application/json; charset=utf-8")
               : "clash" === w && (y = function (e, t = {}) {
                 const n = t?.UUID || null,
                   s = Boolean(t?.ECH),
@@ -1900,7 +1936,7 @@ var f = {
                 let d = e.replace(/mode:\s*Rule\b/g, "mode: rule");
                 const h =
                     "dns:\n  enable: true\n  default-nameserver:\n    - 223.5.5.5\n    - 119.29.29.29\n    - 114.114.114.114\n  use-hosts: true\n  nameserver:\n    - https://sm2.doh.pub/dns-query\n    - https://dns.alidns.com/dns-query\n  fallback:\n    - 8.8.4.4\n    - 208.67.220.220\n  fallback-filter:\n    geoip: true\n    geoip-code: CN\n    ipcidr:\n      - 240.0.0.0/4\n      - 127.0.0.1/32\n      - 0.0.0.0/32\n    domain:\n      - '+.google.com'\n      - '+.facebook.com'\n      - '+.youtube.com'\n",
-                  f = (e) =>
+                  p = (e) =>
                     e.replace(/grpc-opts:\s*\{([\s\S]*?)\}/i, (e, t) => {
                       if (/grpc-user-agent\s*:/i.test(t)) return e;
                       let n = t.trim();
@@ -1911,7 +1947,7 @@ var f = {
                           : `grpc-user-agent: ${u}`
                       }}`;
                     }),
-                  p = (e) =>
+                  f = (e) =>
                     /(?:^|[,{])\s*network:\s*(?:"grpc"|'grpc'|grpc)(?=\s*(?:[,}\n#]|$))/im
                       .test(e),
                   g = (e) => e.match(/type:\s*(\w+)/)?.[1] || "vless",
@@ -1944,10 +1980,10 @@ var f = {
                       n.join("\n");
                   },
                   y = (e) =>
-                    !p(e) || /grpc-user-agent\s*:/i.test(e)
+                    !f(e) || /grpc-user-agent\s*:/i.test(e)
                       ? e
                       : /grpc-opts:\s*\{/i.test(e)
-                      ? f(e)
+                      ? p(e)
                       : e.replace(
                         /\}(\s*)$/,
                         `, grpc-opts: {grpc-user-agent: ${u}}}$1`,
@@ -1986,7 +2022,7 @@ var f = {
                     }
                     const r = e[s];
                     if (/^\s*grpc-opts:\s*\{.*\}\s*(?:#.*)?$/.test(r)) {
-                      return /grpc-user-agent\s*:/i.test(r) || (e[s] = f(r)), e;
+                      return /grpc-user-agent\s*:/i.test(r) || (e[s] = p(r)), e;
                     }
                     let a = e.length, o = t + 2, i = !1;
                     for (let n = s + 1; n < e.length; n++) {
@@ -2073,15 +2109,15 @@ var f = {
                       t.push(e), A++;
                     }
                     let a = t.join("\n");
-                    l && p(a) && (t = b(t, r), a = t.join("\n")),
+                    l && f(a) && (t = b(t, r), a = t.join("\n")),
                       i && w(a, !1) === n.trim() && (t = S(t, r)),
                       C.push(...t);
                   } else C.push(e), A++;
                 }
                 return C.join("\n");
               }(y, e),
-                p["content-type"] = "application/x-yaml; charset=utf-8"),
-            new Response(y, { status: 200, headers: p });
+                f["content-type"] = "application/x-yaml; charset=utf-8"),
+            new Response(y, { status: 200, headers: f });
         }
       } else if ("locations" === k) {
         const e = t.headers.get("Cookie") || "",
@@ -2184,7 +2220,7 @@ var f = {
     );
   },
 };
-function p(e) {
+function f(e) {
   return e
     ? "number" == typeof e.byteLength
       ? e.byteLength
@@ -2249,7 +2285,7 @@ function g(e, t) {
 function w(e, t) {
   if (e.byteLength < 24) return { hasError: !0, message: "Invalid data" };
   const n = new Uint8Array(e.slice(0, 1));
-  if (D(new Uint8Array(e.slice(1, 17))) !== t) {
+  if (R(new Uint8Array(e.slice(1, 17))) !== t) {
     return { hasError: !0, message: "Invalid uuid" };
   }
   const s = new Uint8Array(e.slice(17, 18))[0],
@@ -2381,7 +2417,7 @@ async function P(e, t, n, s) {
     s,
   );
 }
-async function I(e, t, n) {
+async function L(e, t, n) {
   const s = t.slice(),
     r = await crypto.subtle.encrypt(
       { name: "AES-GCM", iv: s, tagLength: 128 },
@@ -2390,7 +2426,7 @@ async function I(e, t, n) {
     );
   return k(t), new Uint8Array(r);
 }
-async function L(e, t, n) {
+async function I(e, t, n) {
   const s = t.slice(),
     r = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv: s, tagLength: 128 },
@@ -2399,7 +2435,7 @@ async function L(e, t, n) {
     );
   return k(t), new Uint8Array(r);
 }
-async function E(e, o, i, u, h, f, g) {
+async function E(e, o, i, u, h, p, g) {
   M(`[TCP转发] 目标: ${e}:${o} | 反代IP: ${s} | 反代兜底: ${
     l ? "是" : "否"
   } | 反代类型: ${r || "proxyip"} | 全局: ${a ? "是" : "否"}`);
@@ -2420,7 +2456,7 @@ async function E(e, o, i, u, h, f, g) {
             M(`[反代连接] 尝试连接到: ${r}:${o} (索引: ${t})`),
               a = connect({ hostname: r, port: o }),
               await m(a),
-              p(n) > 0
+              f(n) > 0
           ) {
             const e = a.writable.getWriter();
             await e.write(n), e.releaseLock();
@@ -2436,7 +2472,7 @@ async function E(e, o, i, u, h, f, g) {
       }
     }
     if (r) {
-      if (a = connect({ hostname: e, port: t }), await m(a), p(n) > 0) {
+      if (a = connect({ hostname: e, port: t }), await m(a), f(n) > 0) {
         const e = a.writable.getWriter();
         await e.write(n), e.releaseLock();
       }
@@ -2446,8 +2482,8 @@ async function E(e, o, i, u, h, f, g) {
       new Error("[反代连接] 所有反代连接失败，且未启用反代兜底，连接终止。");
   }
   async function b(a = !0) {
-    if (f.connectingPromise) return void await f.connectingPromise;
-    const c = a && !w && p(i) > 0,
+    if (p.connectingPromise) return void await p.connectingPromise;
+    const c = a && !w && f(i) > 0,
       d = c ? i : null,
       m = (async () => {
         let a;
@@ -2486,18 +2522,18 @@ async function E(e, o, i, u, h, f, g) {
               for (const h of o) {
                 if (h.includes(".william")) {
                   try {
-                    let f = await J(h, "TXT"),
-                      p = f.filter((e) => 16 === e.type).map((e) => e.data);
+                    let p = await J(h, "TXT"),
+                      f = p.filter((e) => 16 === e.type).map((e) => e.data);
                     if (
-                      0 === p.length &&
+                      0 === f.length &&
                       (M(
                         `[反代解析] 默认DoH未获取到TXT记录，切换Google DoH重试 ${h}`,
                       ),
-                        f = await J(h, "TXT", "https://dns.google/dns-query"),
-                        p = f.filter((e) => 16 === e.type).map((e) => e.data)),
-                        p.length > 0
+                        p = await J(h, "TXT", "https://dns.google/dns-query"),
+                        f = p.filter((e) => 16 === e.type).map((e) => e.data)),
+                        f.length > 0
                     ) {
-                      let g = p[0];
+                      let g = f[0];
                       g.startsWith('"') && g.endsWith('"') &&
                         (g = g.slice(1, -1));
                       const w = g.replace(/\\010/g, ",").replace(/\n/g, ",")
@@ -2562,18 +2598,18 @@ async function E(e, o, i, u, h, f, g) {
           a = await y(atob("UFJPWFlJUC50cDEuMDkwMjI3Lnh5eg=="), 1, d, r, l);
         }
         c && (w = !0),
-          f.socket = a,
+          p.socket = a,
           a.closed.catch(() => {}).finally(() => O(u)),
           j(a, u, h, null);
       })();
-    f.connectingPromise = m;
+    p.connectingPromise = m;
     try {
       await m;
     } finally {
-      f.connectingPromise === m && (f.connectingPromise = null);
+      p.connectingPromise === m && (p.connectingPromise = null);
     }
   }
-  f.retryConnect = async () => b(!w);
+  p.retryConnect = async () => b(!w);
   if (
     r &&
     (a ||
@@ -2589,9 +2625,9 @@ async function E(e, o, i, u, h, f, g) {
   } else {try {
       M(`[TCP转发] 尝试直连到: ${e}:${o}`);
       const t = await y(e, o, i);
-      f.socket = t,
+      p.socket = t,
         j(t, u, h, async () => {
-          f.socket === t && await b();
+          p.socket === t && await b();
         });
     } catch (t) {
       M(`[TCP转发] 直连 ${e}:${o} 失败: ${t.message}`), await b();
@@ -2611,8 +2647,8 @@ async function v(e, t, n) {
             if (t.readyState === WebSocket.OPEN) {
               if (r) {
                 const n = new Uint8Array(r.length + e.byteLength);
-                n.set(r, 0), n.set(e, r.length), await R(t, n.buffer), r = null;
-              } else await R(t, e);
+                n.set(r, 0), n.set(e, r.length), await D(t, n.buffer), r = null;
+              } else await D(t, e);
             }
           },
         }),
@@ -2625,14 +2661,14 @@ function O(e) {
       e.close();
   } catch (e) {}
 }
-function D(e, t = 0) {
+function R(e, t = 0) {
   const n = [...e.slice(t, t + 16)].map((e) => e.toString(16).padStart(2, "0"))
     .join("");
   return `${n.substring(0, 8)}-${n.substring(8, 12)}-${n.substring(12, 16)}-${
     n.substring(16, 20)
   }-${n.substring(20)}`;
 }
-async function R(e, t) {
+async function D(e, t) {
   const n = e.send(t);
   n && "function" == typeof n.then && await n;
 }
@@ -2646,8 +2682,8 @@ async function j(e, t, n, s) {
       }
       if (a) {
         const n = new Uint8Array(a.length + e.byteLength);
-        n.set(a, 0), n.set(e, a.length), await R(t, n.buffer), a = null;
-      } else await R(t, e);
+        n.set(a, 0), n.set(e, a.length), await D(t, n.buffer), a = null;
+      } else await D(t, e);
     };
   try {
     r = e.readable.getReader({ mode: "byob" }), i = !0;
@@ -2663,16 +2699,16 @@ async function j(e, t, n, s) {
         i = null,
         d = null,
         h = !1,
-        f = !1;
-      const p = async () => {
-        if (h) f = !0;
+        p = !1;
+      const f = async () => {
+        if (h) p = !0;
         else {try {
             if (n > 0) {
               const t = new Uint8Array(e.slice(0, n));
               n = 0, await u(t);
             }
           } finally {
-            if (f = !1, i && (clearTimeout(i), i = null), d) {
+            if (p = !1, i && (clearTimeout(i), i = null), d) {
               const e = d;
               d = null, e();
             }
@@ -2683,7 +2719,7 @@ async function j(e, t, n, s) {
         const { done: g, value: w } = await r.read(new Uint8Array(e, n, l));
         if (h = !1, g) break;
         if (!w || 0 === w.byteLength) {
-          f && await p();
+          p && await f();
           continue;
         }
         o = !0, e = w.buffer;
@@ -2692,13 +2728,13 @@ async function j(e, t, n, s) {
           ? m < l
             ? (a = 2,
               m < 4096 && (s = 0),
-              n > 0 ? (n += m, await p()) : await u(w.slice()))
+              n > 0 ? (n += m, await f()) : await u(w.slice()))
             : (s += m,
               n += m,
               i || (i = setTimeout(() => {
-                p().catch(() => O(t));
+                f().catch(() => O(t));
               }, a)),
-              f && await p(),
+              p && await f(),
               n > 458752 &&
               (s > 52428800 && (a = 20),
                 await new Promise((e) => {
@@ -2710,7 +2746,7 @@ async function j(e, t, n, s) {
             n = 0,
             s = 0);
       }
-      h = !1, await p(), i && (clearTimeout(i), i = null);
+      h = !1, await f(), i && (clearTimeout(i), i = null);
     } else {for (;;) {
         const { done: e, value: t } = await r.read();
         if (e) break;
@@ -2766,7 +2802,7 @@ async function H(e, t, n) {
         o = await u.read(),
         o.done || 0 !== new Uint8Array(o.value)[1]
     ) throw new Error("S5 connection failed");
-    return p(n) > 0 && await l.write(n), l.releaseLock(), u.releaseLock(), c;
+    return f(n) > 0 && await l.write(n), l.releaseLock(), u.releaseLock(), c;
   } catch (e) {
     try {
       l.releaseLock();
@@ -2791,7 +2827,7 @@ async function _(e, t, n, s = !1) {
     u = l.writable.getWriter(),
     d = l.readable.getReader(),
     h = new TextEncoder(),
-    f = new TextDecoder();
+    p = new TextDecoder();
   try {
     s && await l.opened;
     const o = `CONNECT ${e}:${t} HTTP/1.1\r\nHost: ${e}:${t}\r\n${
@@ -2814,14 +2850,14 @@ async function _(e, t, n, s = !1) {
       -1 !== n && (c = n + 4);
     }
     if (-1 === c) throw new Error("代理 CONNECT 响应头过长或无效");
-    const w = f.decode(i.slice(0, c)).split("\r\n")[0].match(
+    const w = p.decode(i.slice(0, c)).split("\r\n")[0].match(
         /HTTP\/\d\.\d\s+(\d+)/,
       ),
       m = w ? parseInt(w[1], 10) : NaN;
     if (!Number.isFinite(m) || m < 200 || m >= 300) {
       throw new Error(`Connection failed: HTTP ${m}`);
     }
-    if (d.releaseLock(), p(n) > 0) {
+    if (d.releaseLock(), f(n) > 0) {
       const e = l.writable.getWriter();
       await e.write(n), e.releaseLock();
     }
@@ -3283,7 +3319,7 @@ async function J(e, t, n = "https://cloudflare-dns.com/dns-query") {
       d = u.getUint16(4),
       h = u.getUint16(6);
     M(`[DoH查询] 收到响应 ${e} ${t} via ${n} (${l.length}字节, ${h}条应答)`);
-    const f = (e) => {
+    const p = (e) => {
       const t = [];
       let n = e, s = !1, r = -1, a = 128;
       for (; n < l.length && a-- > 0;) {
@@ -3299,24 +3335,24 @@ async function J(e, t, n = "https://cloudflare-dns.com/dns-query") {
       }
       return -1 === r && (r = n + 1), [t.join("."), r];
     };
-    let p = 12;
+    let f = 12;
     for (let e = 0; e < d; e++) {
-      const [, e] = f(p);
-      p = e + 4;
+      const [, e] = p(f);
+      f = e + 4;
     }
     const g = [];
-    for (let e = 0; e < h && p < l.length; e++) {
-      const [e, t] = f(p);
-      p = t;
-      const n = u.getUint16(p);
-      p += 2, p += 2;
-      const s = u.getUint32(p);
-      p += 4;
-      const r = u.getUint16(p);
-      p += 2;
-      const a = l.slice(p, p + r);
+    for (let e = 0; e < h && f < l.length; e++) {
+      const [e, t] = p(f);
+      f = t;
+      const n = u.getUint16(f);
+      f += 2, f += 2;
+      const s = u.getUint32(f);
+      f += 4;
+      const r = u.getUint16(f);
+      f += 2;
+      const a = l.slice(f, f + r);
       let o;
-      if (p += r, 1 === n && 4 === r) o = `${a[0]}.${a[1]}.${a[2]}.${a[3]}`;
+      if (f += r, 1 === n && 4 === r) o = `${a[0]}.${a[1]}.${a[2]}.${a[3]}`;
       else if (28 === n && 16 === r) {
         const e = [];
         for (let t = 0; t < 16; t += 2) {
@@ -3332,7 +3368,7 @@ async function J(e, t, n = "https://cloudflare-dns.com/dns-query") {
         }
         o = t.join("");
       } else if (5 === n) {
-        const [e] = f(p - r);
+        const [e] = p(f - r);
         o = e;
       } else {o = Array.from(a).map((e) => e.toString(16).padStart(2, "0"))
           .join("");}
@@ -3362,8 +3398,8 @@ async function G(env, t, n, s = "Mozilla/5.0", i = !1) {
     l = t,
     u = "https://dns.alidns.com/dns-query",
     h = "cloudflare-ech.com",
-    f = "{{IP:PORT}}",
-    p = performance.now(),
+    p = "{{IP:PORT}}",
+    f = performance.now(),
     g = {
       TIME: (new Date()).toISOString(),
       HOST: l,
@@ -3400,9 +3436,9 @@ async function G(env, t, n, s = "Mozilla/5.0", i = !1) {
         [c]: "auto",
         SOCKS5: { "启用": r, "全局": a, "账号": o, "白名单": d },
         "路径模板": {
-          [c]: "proxyip=" + f,
-          SOCKS5: { "全局": "socks5://" + f, "标准": "socks5=" + f },
-          HTTP: { "全局": "http://" + f, "标准": "http=" + f },
+          [c]: "proxyip=" + p,
+          SOCKS5: { "全局": "socks5://" + p, "标准": "socks5=" + p },
+          HTTP: { "全局": "http://" + p, "标准": "http=" + p },
         },
       },
       TG: { "启用": !1, BotToken: null, ChatID: null },
@@ -3440,15 +3476,15 @@ async function G(env, t, n, s = "Mozilla/5.0", i = !1) {
     e.SS || (e.SS = { "加密方式": "aes-128-gcm", TLS: !1 }),
     e.反代.路径模板?.[c] ||
     (e.反代.路径模板 = {
-      [c]: "proxyip=" + f,
-      SOCKS5: { "全局": "socks5://" + f, "标准": "socks5=" + f },
-      HTTP: { "全局": "http://" + f, "标准": "http=" + f },
+      [c]: "proxyip=" + p,
+      SOCKS5: { "全局": "socks5://" + p, "标准": "socks5=" + p },
+      HTTP: { "全局": "http://" + p, "标准": "http=" + p },
     });
   const w = e.反代.路径模板[e.反代.SOCKS5.启用?.toUpperCase()];
   let m = "";
   w && e.反代.SOCKS5.账号
-    ? m = (e.反代.SOCKS5.全局 ? w.全局 : w.标准).replace(f, e.反代.SOCKS5.账号)
-    : "auto" !== e.反代[c] && (m = e.反代.路径模板[c].replace(f, e.反代[c]));
+    ? m = (e.反代.SOCKS5.全局 ? w.全局 : w.标准).replace(p, e.反代.SOCKS5.账号)
+    : "auto" !== e.反代[c] && (m = e.反代.路径模板[c].replace(p, e.反代[c]));
   let y = "";
   if (m.includes("?")) {
     const [e, t] = m.split("?");
@@ -3551,7 +3587,7 @@ async function G(env, t, n, s = "Mozilla/5.0", i = !1) {
   } catch (e) {
     console.error(`读取cf.json出错: ${e.message}`);
   }
-  return e.加载时间 = (performance.now() - p).toFixed(2) + "ms", e;
+  return e.加载时间 = (performance.now() - f).toFixed(2) + "ms", e;
 }
 async function q(e, t = 16, n = -1, s = !0) {
   const r = {
@@ -3711,13 +3747,13 @@ async function X(e, t = "443", n = 3e3) {
           return void console.error("Failed to decode response:", e);
         }
         let h = d;
-        const f = "string" == typeof d ? d.replace(/\s/g, "") : "";
+        const p = "string" == typeof d ? d.replace(/\s/g, "") : "";
         if (
-          f.length > 0 && f.length % 4 == 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(f)
+          p.length > 0 && p.length % 4 == 0 && /^[A-Za-z0-9+/]+={0,2}$/.test(p)
         ) {
           try {
             const e = new Uint8Array(
-              atob(f).split("").map((e) => e.charCodeAt(0)),
+              atob(p).split("").map((e) => e.charCodeAt(0)),
             );
             h = new TextDecoder("utf-8").decode(e);
           } catch {}
@@ -3737,12 +3773,12 @@ async function X(e, t = "443", n = 3e3) {
           } else a += h + "\n";
           return;
         }
-        const p = d.trim().split("\n").map((e) => e.trim()).filter((e) => e),
-          g = p.length > 1 && p[0].includes(","),
+        const f = d.trim().split("\n").map((e) => e.trim()).filter((e) => e),
+          g = f.length > 1 && f[0].includes(","),
           w = /^[^\[\]]*:[^\[\]]*:[^\[\]]/,
           m = new URL(i);
         if (g) {
-          const e = p[0].split(",").map((e) => e.trim()), n = p.slice(1);
+          const e = f[0].split(",").map((e) => e.trim()), n = f.slice(1);
           if (
             e.includes("IP地址") && e.includes("端口") && e.includes("数据中心")
           ) {
@@ -3785,7 +3821,7 @@ async function X(e, t = "443", n = 3e3) {
               l && r.add(`${n}:${u}`);
             });
           }
-        } else {p.forEach((e) => {
+        } else {f.forEach((e) => {
             const n = e.indexOf("#"),
               [a, o] = n > -1 ? [e.substring(0, n), e.substring(n)] : [e, ""];
             let i = !1;
@@ -3956,11 +3992,11 @@ async function te(e, t, n, s) {
     const d = u?.data?.viewer?.accounts?.[0];
     if (!d) throw new Error("未找到账户数据");
     const h = a(d.pagesFunctionsInvocationsAdaptiveGroups),
-      f = a(d.workersInvocationsAdaptive),
-      p = h + f,
+      p = a(d.workersInvocationsAdaptive),
+      f = h + p,
       g = 1e5;
-    return M(`统计结果 - Pages: ${h}, Workers: ${f}, 总计: ${p}, 上限: 100000`),
-      { success: !0, pages: h, workers: f, total: p, max: g };
+    return M(`统计结果 - Pages: ${h}, Workers: ${p}, 总计: ${f}, 上限: 100000`),
+      { success: !0, pages: h, workers: p, total: f, max: g };
   } catch (e) {
     return console.error("获取使用量错误:", e.message),
       { success: !1, pages: 0, workers: 0, total: 0, max: 1e5 };
@@ -4075,12 +4111,12 @@ function ne(e) {
         r = n(s[e - 2], 17) ^ n(s[e - 2], 19) ^ s[e - 2] >>> 10;
       s[e] = s[e - 16] + t + s[e - 7] + r >>> 0;
     }
-    let [a, o, c, l, u, d, h, f] = r;
+    let [a, o, c, l, u, d, h, p] = r;
     for (let e = 0; e < 64; e++) {
-      const r = f + (n(u, 6) ^ n(u, 11) ^ n(u, 25)) + (u & d ^ ~u & h) + t[e] +
+      const r = p + (n(u, 6) ^ n(u, 11) ^ n(u, 25)) + (u & d ^ ~u & h) + t[e] +
             s[e] >>> 0,
         i = a & o ^ a & c ^ o & c;
-      f = h,
+      p = h,
         h = d,
         d = u,
         u = l + r >>> 0,
@@ -4104,7 +4140,7 @@ function ne(e) {
             ? d
             : 6 === e
             ? h
-            : f) >>> 0;
+            : p) >>> 0;
     }
   }
   let c = "";
@@ -4191,4 +4227,4 @@ async function se(e = "socks5", t) {
     };
   }
 }
-export { f as default };
+export { p as default };

@@ -1375,12 +1375,14 @@ async function 处理gRPC请求(request, yourUUID) {
   let 判断是否是木马 = null;
   let 当前写入Socket = null;
   let 远端写入器 = null;
+  let 错误状态码 = 0; // 0=OK, 其他为错误码
+  let 错误消息 = "";
   //log('[gRPC] 开始处理双向流');
   const grpcHeaders = new Headers({
     "Content-Type": "application/grpc",
-    "grpc-status": "0",
     "X-Accel-Buffering": "no",
     "Cache-Control": "no-store",
+    "TE": "trailers", // 声明支持 trailers
   });
 
   const 下行缓存上限 = 64 * 1024;
@@ -1460,9 +1462,70 @@ async function 处理gRPC请求(request, yourUUID) {
           }
         };
 
-        const 关闭连接 = () => {
+        // 发送 gRPC Trailers
+        const 发送Trailers = async () => {
+          try {
+            // gRPC Trailer 格式：长度前缀（4字节大端）+ Protobuf 编码的元数据
+            // 简化版本：直接发送状态码和消息
+            const statusStr = String(错误状态码);
+            const messageStr = 错误消息;
+
+            // 构建 trailer payload（使用简单的文本格式，兼容大多数客户端）
+            const trailerParts = [];
+            trailerParts.push(`grpc-status: ${statusStr}`);
+            if (messageStr) {
+              trailerParts.push(
+                `grpc-message: ${encodeURIComponent(messageStr)}`,
+              );
+            }
+            const trailerText = trailerParts.join("\r\n") + "\r\n";
+            const trailerBytes = new TextEncoder().encode(trailerText);
+
+            // 封装为 gRPC 帧格式
+            const lenBytes数组 = [];
+            let remaining = trailerBytes.byteLength >>> 0;
+            while (remaining > 127) {
+              lenBytes数组.push((remaining & 0x7f) | 0x80);
+              remaining >>>= 7;
+            }
+            lenBytes数组.push(remaining);
+            const lenBytes = new Uint8Array(lenBytes数组);
+
+            const protobufLen = 1 + lenBytes.length + trailerBytes.byteLength;
+            const frame = new Uint8Array(5 + protobufLen);
+            frame[0] = 0x80; // Trailer 帧标识（最高位为1）
+            frame[1] = (protobufLen >>> 24) & 0xff;
+            frame[2] = (protobufLen >>> 16) & 0xff;
+            frame[3] = (protobufLen >>> 8) & 0xff;
+            frame[4] = protobufLen & 0xff;
+            frame[5] = 0x0a;
+            frame.set(lenBytes, 6);
+            frame.set(trailerBytes, 6 + lenBytes.length);
+
+            // 入队并立即发送
+            发送队列.push(frame);
+            队列字节数 += frame.byteLength;
+            刷新发送队列(true);
+
+            log(
+              `[gRPC Trailers] 发送状态码=${错误状态码}, 消息=${
+                错误消息 || "无"
+              }`,
+            );
+          } catch (err) {
+            log(`[gRPC Trailers] 发送失败: ${err?.message || err}`);
+          }
+        };
+
+        const 关闭连接 = async () => {
           if (已关闭) return;
+
+          // 先刷新所有待发送数据
           刷新发送队列(true);
+
+          // 发送 gRPC Trailers
+          await 发送Trailers();
+
           已关闭 = true;
           grpcBridge.readyState = WebSocket.CLOSED;
           if (刷新定时器) clearTimeout(刷新定时器);
@@ -1642,13 +1705,17 @@ async function 处理gRPC请求(request, yourUUID) {
             刷新发送队列();
           }
         } catch (err) {
-          log(`[gRPC转发] 处理失败: ${err?.message || err}`);
+          错误状态码 = 13; // INTERNAL - 内部错误
+          错误消息 = err?.message || String(err);
+          log(`[gRPC转发] 处理失败: ${错误消息}`);
         } finally {
           释放远端写入器();
-          关闭连接();
+          await 关闭连接();
         }
       },
       cancel() {
+        错误状态码 = 1; // CANCELLED - 取消
+        错误消息 = "Client cancelled the stream";
         try {
           remoteConnWrapper.socket?.close();
         } catch (e) {}
